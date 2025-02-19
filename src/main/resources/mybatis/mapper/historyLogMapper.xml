@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.colon.mattfolio.mapper.HistoryLogMapper">
+
+    <insert id="insertErrorLog" parameterType="com.colon.mattfolio.model.HistoryLogRegisterRequestDto">
+        INSERT INTO tb_com_log_error (
+            request_info,
+            created_at,
+            created_by
+        )
+        VALUES (
+            #{requestInfo},
+            #{createdAt},
+            #{createdBy}
+        )
+    </insert>
+
+</mapper>
