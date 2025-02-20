@@ -2,7 +2,7 @@ package com.colon.mattfolio.model.common;
 
 import java.time.LocalDateTime;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,18 +19,18 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class BaseDto {
 
-    @ApiModelProperty(value = "사용 여부", example = "Y")
+    @Schema(description = "사용 여부", example = "Y")
     private String useYn;
 
-    @ApiModelProperty(value = "생성 ID", example = "1001")
+    @Schema(description = "생성 ID", example = "1001")
     private Long createdId;
 
-    @ApiModelProperty(value = "생성 일시", example = "2024-11-11T17:04:56.082147")
+    @Schema(description = "생성 일시", example = "2024-11-11T17:04:56.082147")
     private LocalDateTime createdAt;
 
-    @ApiModelProperty(value = "수정 ID", example = "2002")
+    @Schema(description = "수정 ID", example = "2002")
     private Long updatedId;
 
-    @ApiModelProperty(value = "수정 일시", example = "2024-11-11T17:04:56.082147")
+    @Schema(description = "수정 일시", example = "2024-11-11T17:04:56.082147")
     private LocalDateTime updatedAt;
 }

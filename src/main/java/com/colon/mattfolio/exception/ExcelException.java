@@ -26,6 +26,11 @@ public class ExcelException extends MasterException {
     public enum Reason implements BaseReason {
         INVALID_RESOURCE(ApiResultCode.Excel.INVALID_RESOURCE.getCode(), Message.getMessage("excel.invalid.resource")), // 엑셀 이상
         FAIL_CREATE_XLSX(ApiResultCode.Excel.FAIL_CREATE_XLSX.getCode(), Message.getMessage("excel.fail.create")), // 엑셀 파일 생성 실패
+        EMPTY_FILE(ApiResultCode.Excel.EMPTY_FILE.getCode(), Message.getMessage("excel.empty.file")), // 빈 파일
+        NOT_EXCEL_EXTENSION(ApiResultCode.Excel.NOT_EXCEL_EXTENSION.getCode(), Message.getMessage("excel.invalid.ext")), // 엑셀 확장자 이상
+        INVALID_HEADER(ApiResultCode.Excel.INVALID_HEADER.getCode(), Message.getMessage("excel.invalid.header")), // 잘못된 헤더
+        HEADER_MISMATCH(ApiResultCode.Excel.HEADER_MISMATCH.getCode(), Message.getMessage("excel.header.mismatch")), // 헤더와 DTO 불일치
+        ROW_MAPPING_FAIL(ApiResultCode.Excel.ROW_MAPPING_FAIL.getCode(), Message.getMessage("excel.row.mapping.fail")); // 행 매핑 실패
         ;
 
         private final Integer code; // 예외 코드

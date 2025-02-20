@@ -37,102 +37,104 @@ import lombok.RequiredArgsConstructor;
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig {
 
-    private final AccountAuthenticationProvider accountAuthenticationProvider;
-    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
-    private final RestAuthenticationFailureHandler restAuthenticationFailureHandler;
-    private final RestAuthenticationSuccessHandler restAuthenticationSuccessHandler;
-    private final RestLogoutSuccessHandler restLogoutSuccessHandler;
-    private final RestTemplateBuilder restTemplateBuilder;
+	private final AccountAuthenticationProvider accountAuthenticationProvider;
+	private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+	private final RestAuthenticationFailureHandler restAuthenticationFailureHandler;
+	private final RestAuthenticationSuccessHandler restAuthenticationSuccessHandler;
+	private final RestLogoutSuccessHandler restLogoutSuccessHandler;
+	private final RestTemplateBuilder restTemplateBuilder;
 
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        return new ProviderManager(List.of(accountAuthenticationProvider));
-    }
+	@Bean
+	public AuthenticationManager authenticationManager() {
+		return new ProviderManager(List.of(accountAuthenticationProvider));
+	}
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.addFilterBefore(createCustomFilter(), UsernamePasswordAuthenticationFilter.class)
-            .headers(headers -> headers.frameOptions(frame -> frame.disable()))
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http.addFilterBefore(createCustomFilter(), UsernamePasswordAuthenticationFilter.class)
+			.headers(headers -> headers.frameOptions(frame -> frame.disable()))
 
-            .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET, "/")
-                .permitAll()
-                .requestMatchers("/oauth/**", "/oauth2/callback", "/webjars/**")
-                .permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/**")
-                .permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/**")
-                .permitAll()
-                .requestMatchers(HttpMethod.PUT, "/api/**")
-                .permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/api/**")
-                .permitAll()
-                .requestMatchers("/cert/**")
-                .permitAll()
-                .requestMatchers("/error")
-                .permitAll()
-                .anyRequest()
-                .authenticated())
+			.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET, "/")
+				.permitAll()
+				.requestMatchers("/oauth/**", "/oauth2/callback", "/webjars/**")
+				.permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/**")
+				.permitAll()
+				.requestMatchers(HttpMethod.GET, "/api/**")
+				.permitAll()
+				.requestMatchers(HttpMethod.PUT, "/api/**")
+				.permitAll()
+				.requestMatchers(HttpMethod.DELETE, "/api/**")
+				.permitAll()
+				.requestMatchers("/cert/**")
+				.permitAll()
+				.requestMatchers("/error")
+				.permitAll()
+				.anyRequest()
+				.authenticated())
 
-            .exceptionHandling(exception -> exception.authenticationEntryPoint(restAuthenticationEntryPoint)
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    throw accessDeniedException;
-                }))
+			.exceptionHandling(exception -> exception.authenticationEntryPoint(restAuthenticationEntryPoint)
+				.accessDeniedHandler((request, response, accessDeniedException) -> {
+					throw accessDeniedException;
+				}))
 
-            .formLogin(form -> form.successHandler(restAuthenticationSuccessHandler)
-                .failureHandler(restAuthenticationFailureHandler))
+			.formLogin(form -> form.successHandler(restAuthenticationSuccessHandler)
+				.failureHandler(restAuthenticationFailureHandler))
 
-            .logout(logout -> logout.logoutSuccessHandler(restLogoutSuccessHandler))
+			.logout(logout -> logout.logoutSuccessHandler(restLogoutSuccessHandler))
 
-            .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+			.csrf(csrf -> csrf.disable())
+			.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
-        return http.build();
-    }
+		return http.build();
+	}
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-            .requestMatchers( //
-                    "/docs/index.html", //
-                    "/vendors/**", //
-                    "/swagger-ui.html", //
-                    "/swagger-ui/**", //
-                    "/swagger-resources/**", //
-                    "/v2/api-docs", //
-                    "/webjars/**", //
-                    "/api/poison-map", //
-                    "/api/poison-map/**", //
-                    "/fonts/**");
-    }
+	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+		return (web) -> web.ignoring()
+			.requestMatchers( //
+					"/docs/index.html", //
+					"/vendors/**", //
+					"/swagger-ui.html", //
+					"/swagger-ui/**", //
+					"/swagger-resources/**", //
+					"/v2/api-docs", //
+					"/apidocs.json/**", //
+					"/error", //
+					"/webjars/**", //
+					"/api/poison-map", //
+					"/api/poison-map/**", //
+					"/fonts/**");
+	}
 
-    @Bean
-    @ConditionalOnMissingBean
-    public RestTemplate restTemplate() {
-        return restTemplateBuilder.build();
-    }
+	@Bean
+	@ConditionalOnMissingBean
+	public RestTemplate restTemplate() {
+		return restTemplateBuilder.build();
+	}
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("*");
-        configuration.addAllowedMethod("GET");
-        configuration.addAllowedMethod("POST");
-        configuration.addAllowedMethod("PUT");
-        configuration.addAllowedMethod("DELETE");
-        configuration.addAllowedMethod("OPTIONS");
-        configuration.addAllowedHeader("Authorization");
-        configuration.addAllowedHeader("*");
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.addAllowedOrigin("*");
+		configuration.addAllowedMethod("GET");
+		configuration.addAllowedMethod("POST");
+		configuration.addAllowedMethod("PUT");
+		configuration.addAllowedMethod("DELETE");
+		configuration.addAllowedMethod("OPTIONS");
+		configuration.addAllowedHeader("Authorization");
+		configuration.addAllowedHeader("*");
+		configuration.setAllowCredentials(true);
+		configuration.setMaxAge(3600L);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
+	}
 
-    protected AbstractAuthenticationProcessingFilter createCustomFilter() {
-        ExtraAuthFilter filter = new ExtraAuthFilter(new NegatedRequestMatcher(new AndRequestMatcher(new AntPathRequestMatcher("/oauth/**"))));
-        filter.setAuthenticationManager(authenticationManager());
-        return filter;
-    }
+	protected AbstractAuthenticationProcessingFilter createCustomFilter() {
+		ExtraAuthFilter filter = new ExtraAuthFilter(new NegatedRequestMatcher(new AndRequestMatcher(new AntPathRequestMatcher("/oauth/**"))));
+		filter.setAuthenticationManager(authenticationManager());
+		return filter;
+	}
 }

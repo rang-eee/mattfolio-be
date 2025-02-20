@@ -2,7 +2,7 @@ package com.colon.mattfolio.model.common;
 
 import java.util.List;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,19 +19,19 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class PagingResponseDto<T> {
 
-    @ApiModelProperty(value = "총 데이터 건수")
+    @Schema(description = "총 데이터 건수")
     private Integer totalElements;
 
-    @ApiModelProperty(value = "페이지당 개수")
+    @Schema(description = "페이지당 개수")
     private Integer size;
 
-    @ApiModelProperty(value = "현재 페이지 번호")
+    @Schema(description = "현재 페이지 번호")
     private Integer number;
 
-    @ApiModelProperty(value = "총 페이지 개수")
+    @Schema(description = "총 페이지 개수")
     private int totalPages;
 
-    @ApiModelProperty(value = "목록 데이터(T)")
+    @Schema(description = "목록 데이터(T)")
     private List<T> content;
 
 }

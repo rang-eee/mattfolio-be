@@ -3,15 +3,15 @@
 <mapper namespace="com.colon.mattfolio.mapper.HistoryLogMapper">
 
     <insert id="insertErrorLog" parameterType="com.colon.mattfolio.model.HistoryLogRegisterRequestDto">
-        INSERT INTO tb_com_log_error (
-            request_info,
-            created_at,
-            created_by
+        INSERT INTO MF_COM_LOG_ERROR (
+            REQUEST_INFO,
+            CREATED_BY,
+            CREATED_AT
         )
         VALUES (
             #{requestInfo},
-            #{createdAt},
-            #{createdBy}
+            #{createdBy},
+            #{createdAt}
         )
     </insert>
 

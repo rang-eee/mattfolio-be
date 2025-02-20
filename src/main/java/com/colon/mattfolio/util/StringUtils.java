@@ -3,9 +3,15 @@ package com.colon.mattfolio.util;
 import java.util.List;
 import java.util.StringJoiner;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 
 public class StringUtils {
+
+    private static final char FOLDER_SEPARATOR_CHAR = '/';
+
+    private static final char EXTENSION_SEPARATOR = '.';
 
     /**
      * 문자열이 null이거나 빈 문자열인지 확인합니다.
@@ -137,6 +143,87 @@ public class StringUtils {
         }
 
         return decoded;
+    }
+
+    /**
+     * 주어진 Java 리소스 경로에서 파일명을 추출합니다. <br/>
+     * 예: {@code "mypath/myfile.txt" &rarr; "myfile.txt"}.
+     * 
+     * @param path 파일 경로 (값이 {@code null}일 수 있음)
+     * @return 추출된 파일명 또는 파일명이 없을 경우 {@code null}
+     */
+    @Nullable
+    public static String getFilename(@Nullable String path) {
+        if (path == null) {
+            return null;
+        }
+
+        int separatorIndex = path.lastIndexOf(FOLDER_SEPARATOR_CHAR);
+        return (separatorIndex != -1 ? path.substring(separatorIndex + 1) : path);
+    }
+
+    /**
+     * 주어진 Java 리소스 경로에서 파일 확장자를 추출합니다. <br/>
+     * 예: "mypath/myfile.txt" &rarr; "txt".
+     * 
+     * @param path 파일 경로 (값이 {@code null}일 수 있음)
+     * @return 추출된 파일 확장자 또는 확장자가 없을 경우 {@code null}
+     */
+    @Nullable
+    public static String getFilenameExtension(@Nullable String path) {
+        if (path == null) {
+            return null;
+        }
+
+        int extIndex = path.lastIndexOf(EXTENSION_SEPARATOR);
+        if (extIndex == -1) {
+            return null;
+        }
+
+        int folderIndex = path.lastIndexOf(FOLDER_SEPARATOR_CHAR);
+        if (folderIndex > extIndex) {
+            return null;
+        }
+
+        return path.substring(extIndex + 1);
+    }
+
+    /**
+     * 카멜 케이스를 스네이크 케이스로 변환하는 메소드 <br/>
+     * 예: myVariableName → my_variable_name
+     * 
+     * @param input 카멜 케이스 문자열
+     * @return 스네이크 케이스 문자열
+     */
+    public static String camelToSnake(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+        return input.replaceAll("([a-zA-Z])([0-9])", "$1_$2") // 문자 + 숫자 사이에 "_" 추가
+            .replaceAll("([0-9])([a-zA-Z])", "$1_$2") // 숫자 + 문자 사이에 "_" 추가
+            .replaceAll("([a-z])([A-Z])", "$1_$2") // 소문자 + 대문자 사이에 "_" 추가
+            .toLowerCase();
+    }
+
+    /**
+     * 스네이크 케이스를 카멜 케이스로 변환하는 메소드 <br/>
+     * 예: my_variable_name → myVariableName
+     * 
+     * @param input 스네이크 케이스 문자열
+     * @return 카멜 케이스 문자열
+     */
+    public static String snakeToCamel(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+        String[] parts = input.split("_");
+        StringBuilder camelCaseString = new StringBuilder(parts[0]);
+        for (int i = 1; i < parts.length; i++) {
+            camelCaseString.append(parts[i].substring(0, 1)
+                .toUpperCase())
+                .append(parts[i].substring(1));
+        }
+        return camelCaseString.toString();
     }
 
 }
