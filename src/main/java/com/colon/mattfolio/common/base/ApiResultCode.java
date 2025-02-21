@@ -1,8 +1,8 @@
 package com.colon.mattfolio.common.base;
 
-import com.colon.mattfolio.exception.CommonException;
-import com.colon.mattfolio.exception.ExampleException;
-import com.colon.mattfolio.exception.ExcelException;
+import com.colon.mattfolio.common.exception.CommonException;
+import com.colon.mattfolio.common.exception.ExampleException;
+import com.colon.mattfolio.common.exception.ExcelException;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

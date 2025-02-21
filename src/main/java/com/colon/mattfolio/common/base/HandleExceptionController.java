@@ -3,7 +3,6 @@ package com.colon.mattfolio.common.base;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AccessDeniedException;
-import java.time.LocalDateTime;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Set;
@@ -22,10 +21,8 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
-import com.colon.mattfolio.config.Message;
-import com.colon.mattfolio.model.HistoryLogRegisterRequestDto;
+import com.colon.mattfolio.common.property.MessageProperties;
 import com.colon.mattfolio.model.common.ApiResultDto;
-import com.colon.mattfolio.service.HistoryLogService;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,7 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class HandleExceptionController {
 
-    private final HistoryLogService historyLogService;
+    // private final HistoryLogService historyLogService;
 
     /**
      * 파일업로드 용량 초과 오류 handler
@@ -59,7 +56,7 @@ public class HandleExceptionController {
 
         ApiResultDto<Void> result = new ApiResultDto<>();
         result.setResultCode(994);
-        result.setRawResultMessage(Message.getMessage("common.proc.failed.uploadSize"));
+        result.setRawResultMessage(MessageProperties.getMessage("common.proc.failed.uploadSize"));
 
         return new ResponseEntity<>(result, HttpStatus.PAYLOAD_TOO_LARGE);
     }
@@ -227,11 +224,12 @@ public class HandleExceptionController {
         log.error(logContent);
 
         // 로그 테이블 데이터 적재
-        historyLogService.insertErrorLog(HistoryLogRegisterRequestDto.builder()
-            .requestInfo(logContent)
-            .createdBy("system")
-            .createdAt(LocalDateTime.now())
-            .build());
+        // @TODO 히스토리 적재
+        // historyLogService.insertErrorLog(HistoryLogRegisterRequestDto.builder()
+        // .requestInfo(logContent)
+        // .createdBy("system")
+        // .createdAt(LocalDateTime.now())
+        // .build());
 
         return new ResponseEntity<>(new ApiResultDto<>(999, "common.proc.failed", null), HttpStatus.INTERNAL_SERVER_ERROR);
     }

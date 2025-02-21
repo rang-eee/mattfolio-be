@@ -18,8 +18,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.colon.mattfolio.annotation.XlsxReadMappingField;
-import com.colon.mattfolio.exception.ExcelException;
+import com.colon.mattfolio.common.annotation.XlsxReadMappingField;
+import com.colon.mattfolio.common.exception.ExcelException;
 
 /**
  * 엑셀 파싱 유틸리티

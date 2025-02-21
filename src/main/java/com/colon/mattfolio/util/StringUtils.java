@@ -3,9 +3,9 @@ package com.colon.mattfolio.util;
 import java.util.List;
 import java.util.StringJoiner;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.StringEscapeUtils;
+
+import jakarta.annotation.Nullable;
 
 public class StringUtils {
 

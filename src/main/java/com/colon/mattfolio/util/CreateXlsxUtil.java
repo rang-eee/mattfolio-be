@@ -35,8 +35,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import com.colon.mattfolio.annotation.XlsxMappingField;
-import com.colon.mattfolio.util.interfaces.CreateXlsxUtilInterface;
+import com.colon.mattfolio.common.annotation.XlsxMappingField;
 
 import lombok.Getter;
 

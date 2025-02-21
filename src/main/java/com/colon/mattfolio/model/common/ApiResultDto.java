@@ -2,7 +2,7 @@ package com.colon.mattfolio.model.common;
 
 import java.util.List;
 
-import com.colon.mattfolio.config.Message;
+import com.colon.mattfolio.common.property.MessageProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -64,7 +64,7 @@ public class ApiResultDto<T> {
      */
     public ApiResultDto(Integer resultCode, String key, T data) {
         this.resultCode = resultCode;
-        this.resultMessage = Message.getMessage(key);
+        this.resultMessage = MessageProperties.getMessage(key);
         this.data = data;
     }
 
@@ -101,7 +101,7 @@ public class ApiResultDto<T> {
      */
     public ApiResultDto(Integer resultCode, String key) {
         this.resultCode = resultCode;
-        this.resultMessage = Message.getMessage(key);
+        this.resultMessage = MessageProperties.getMessage(key);
     }
 
     /**
@@ -112,7 +112,7 @@ public class ApiResultDto<T> {
      * @param key 메시지 키
      */
     public void setResultMessage(String key) {
-        this.resultMessage = Message.getMessage(key);
+        this.resultMessage = MessageProperties.getMessage(key);
     }
 
     /**
@@ -124,7 +124,7 @@ public class ApiResultDto<T> {
      * @param args 바인딩 변수에 치환될 값
      */
     public void setResultMessage(String key, Object... args) {
-        this.resultMessage = Message.getMessage(key, args);
+        this.resultMessage = MessageProperties.getMessage(key, args);
     }
 
     /**
