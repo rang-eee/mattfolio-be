@@ -23,7 +23,6 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-import org.springframework.security.oauth2.provider.error.DefaultWebResponseExceptionTranslator;
 import org.springframework.security.oauth2.provider.error.WebResponseExceptionTranslator;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
@@ -45,9 +44,7 @@ import lombok.RequiredArgsConstructor;
 public class OAuthConfiguration {
 
     private final PasswordEncoder passwordEncoder;
-    // private final AuthenticationManager authenticationManager;
     private final AppProperties appProperties;
-    // private final UserDetailsServiceImpl userDetailsService;
 
     /**
      * OAuth2 인증 서버 엔드포인트에 대한 보안 필터 체인
@@ -66,22 +63,33 @@ public class OAuthConfiguration {
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
         AppProperties.Oauth oauthProperties = appProperties.getOauth();
+
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID()
             .toString())
             .clientId(oauthProperties.getClientId())
             .clientSecret(passwordEncoder.encode(oauthProperties.getClientSecret()))
             .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-            // NOTE: "password" grant type는 Spring Authorization Server에서 기본 지원되지 않으므로
-            // 보안상의 이유로 사용을 재검토하시기 바랍니다.
-            .authorizationGrantType(new AuthorizationGrantType("password"))
+
+            // [중요] password grant 제거
+            // .authorizationGrantType(new AuthorizationGrantType("password"))
+
+            // 권장: Authorization Code, Refresh Token, Client Credentials
+            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
             .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+
+            // Authorization Code 방식을 사용할 때 필요한 redirectUri
+            // .redirectUri("http://localhost:3000/login/oauth2/code/mattfolio")
+            .redirectUri("http://localhost:8180/swagger-ui/oauth2-redirect.html")
+            // ↑ 실제 리다이렉트 경로로 수정
+
             .scope("any")
             .tokenSettings(TokenSettings.builder()
                 .accessTokenTimeToLive(Duration.ofSeconds(oauthProperties.getTokenValiditySeconds()))
                 .refreshTokenTimeToLive(Duration.ofSeconds(oauthProperties.getRefreshTokenValiditySeconds()))
                 .build())
             .build();
+
         return new InMemoryRegisteredClientRepository(registeredClient);
     }
 
@@ -90,6 +98,8 @@ public class OAuthConfiguration {
      */
     @Bean
     public AuthorizationServerSettings providerSettings() {
+        // 기본 토큰 엔드포인트: /oauth2/token
+        // 기본 인가 엔드포인트: /oauth2/authorize
         return AuthorizationServerSettings.builder()
             .issuer("http://localhost:8080")
             .build();
@@ -119,33 +129,18 @@ public class OAuthConfiguration {
     }
 
     /**
-     * (선택사항) 기존 코드와 유사한 토큰 서비스 빈. Spring Authorization Server는 내부에서 토큰 관리를 처리하므로 별도 사용은 권장되지 않음.
-     */
-    // @Bean
-    // @Primary
-    // public DefaultTokenServices tokenServices() {
-    // DefaultTokenServices tokenServices = new DefaultTokenServices();
-    // tokenServices.setSupportRefreshToken(true);
-    // return tokenServices;
-    // }
-
-    /**
      * OAuth2 예외 처리 번역기 (기존 loginExceptionTranslator와 유사하게 구현)
      */
     @Bean
     public WebResponseExceptionTranslator<OAuth2Exception> loginExceptionTranslator() {
-        return new WebResponseExceptionTranslator<OAuth2Exception>() {
-            @Override
-            public ResponseEntity<OAuth2Exception> translate(Exception e) throws Exception {
-                e.printStackTrace();
-                if (e instanceof LoginExpiredException) {
-                    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-                }
-                // 필요한 경우 여기서 e를 적절히 변환합니다.
-                OAuth2Exception oAuth2Exception = new OAuth2Exception(e.getMessage());
-                HttpHeaders headers = new HttpHeaders();
-                return new ResponseEntity<>(oAuth2Exception, headers, HttpStatus.BAD_REQUEST);
+        return e -> {
+            e.printStackTrace();
+            if (e instanceof LoginExpiredException) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
+            OAuth2Exception oAuth2Exception = new OAuth2Exception(e.getMessage());
+            HttpHeaders headers = new HttpHeaders();
+            return new ResponseEntity<>(oAuth2Exception, headers, HttpStatus.BAD_REQUEST);
         };
     }
 

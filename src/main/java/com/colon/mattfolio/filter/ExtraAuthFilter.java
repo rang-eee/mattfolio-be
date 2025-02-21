@@ -20,7 +20,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class ExtraAuthFilter extends AbstractAuthenticationProcessingFilter {
 
-    public static final String FACTORY_TOKEN_HEADER = "tq-fac-token";
     public static final String OA_TOKEN_HEADER = "tq-oa-token";
 
     public ExtraAuthFilter(RequestMatcher requestMatcher) {

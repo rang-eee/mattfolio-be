@@ -32,10 +32,12 @@ public class SwaggerConfig {
 
 	@Bean
 	public OpenAPI customOpenAPI() {
-		return new OpenAPI()//
-			.components(new Components().addSecuritySchemes("spring_oauth", new SecurityScheme().type(SecurityScheme.Type.OAUTH2)
-				.flows(new OAuthFlows().password(new OAuthFlow().tokenUrl("/oauth/token")
-					.scopes(new Scopes().addString("any", "for any operations"))))))
+		return new OpenAPI().components(new Components().addSecuritySchemes("spring_oauth", new SecurityScheme().type(SecurityScheme.Type.OAUTH2)
+			.flows(new OAuthFlows().authorizationCode(new OAuthFlow()
+				// Spring Authorization Server 기본 엔드포인트
+				.authorizationUrl("/oauth2/authorize")
+				.tokenUrl("/oauth2/token")
+				.scopes(new Scopes().addString("any", "for any operations"))))))
 			.addSecurityItem(new SecurityRequirement().addList("spring_oauth"))
 			.info(new Info().title(appProperties.getName())
 				.version("2.0.0")

@@ -51,12 +51,14 @@ public class WebSecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.addFilterBefore(createCustomFilter(), UsernamePasswordAuthenticationFilter.class)
+		http
+			// ExtraAuthFilter 등록
+			.addFilterBefore(createCustomFilter(), UsernamePasswordAuthenticationFilter.class)
 			.headers(headers -> headers.frameOptions(frame -> frame.disable()))
 
 			.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET, "/")
 				.permitAll()
-				.requestMatchers("/oauth/**", "/oauth2/callback", "/webjars/**")
+				.requestMatchers("/oauth2/**", "/webjars/**")
 				.permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/**")
 				.permitAll()
@@ -69,6 +71,8 @@ public class WebSecurityConfig {
 				.requestMatchers("/cert/**")
 				.permitAll()
 				.requestMatchers("/error")
+				.permitAll()
+				.requestMatchers("/login")
 				.permitAll()
 				.anyRequest()
 				.authenticated())
@@ -92,19 +96,7 @@ public class WebSecurityConfig {
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
 		return (web) -> web.ignoring()
-			.requestMatchers( //
-					"/docs/index.html", //
-					"/vendors/**", //
-					"/swagger-ui.html", //
-					"/swagger-ui/**", //
-					"/swagger-resources/**", //
-					"/v2/api-docs", //
-					"/apidocs.json/**", //
-					"/error", //
-					"/webjars/**", //
-					"/api/poison-map", //
-					"/api/poison-map/**", //
-					"/fonts/**");
+			.requestMatchers("/docs/index.html", "/vendors/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/v2/api-docs", "/apidocs.json/**", "/error", "/webjars/**", "/api/poison-map", "/api/poison-map/**", "/fonts/**");
 	}
 
 	@Bean
@@ -133,7 +125,7 @@ public class WebSecurityConfig {
 	}
 
 	protected AbstractAuthenticationProcessingFilter createCustomFilter() {
-		ExtraAuthFilter filter = new ExtraAuthFilter(new NegatedRequestMatcher(new AndRequestMatcher(new AntPathRequestMatcher("/oauth/**"))));
+		ExtraAuthFilter filter = new ExtraAuthFilter(new NegatedRequestMatcher(new AndRequestMatcher(new AntPathRequestMatcher("/oauth2/**"))));
 		filter.setAuthenticationManager(authenticationManager());
 		return filter;
 	}
