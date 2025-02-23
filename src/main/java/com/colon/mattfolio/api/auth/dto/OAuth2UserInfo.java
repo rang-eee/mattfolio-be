@@ -27,6 +27,7 @@ public record OAuth2UserInfo(String name, String email, String profile) {
             .build();
     }
 
+    @SuppressWarnings("unchecked")
     private static OAuth2UserInfo ofKakao(Map<String, Object> attributes) {
         Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
         Map<String, Object> profile = (Map<String, Object>) account.get("profile");

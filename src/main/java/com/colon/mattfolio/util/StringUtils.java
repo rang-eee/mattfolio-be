@@ -3,7 +3,7 @@ package com.colon.mattfolio.util;
 import java.util.List;
 import java.util.StringJoiner;
 
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import jakarta.annotation.Nullable;
 

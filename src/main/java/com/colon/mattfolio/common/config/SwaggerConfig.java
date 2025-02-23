@@ -4,8 +4,6 @@ import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.colon.mattfolio.common.property.AppProperties;
-
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.OAuthFlow;
 import io.swagger.v3.oas.annotations.security.OAuthFlows;
@@ -28,8 +26,6 @@ import lombok.AllArgsConstructor;
 @Configuration
 @AllArgsConstructor
 public class SwaggerConfig {
-
-	private final AppProperties appProperties;
 
 	@Bean
 	public GroupedOpenApi v1Api() {

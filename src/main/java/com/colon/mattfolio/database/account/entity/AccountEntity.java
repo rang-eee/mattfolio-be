@@ -67,4 +67,9 @@ public class AccountEntity extends BaseTimeEntity {
                 .toEntity();
         }
     }
+
+    public AccountEntity update(String name) {
+        this.name = name;
+        return this;
+    }
 }

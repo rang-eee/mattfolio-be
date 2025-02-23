@@ -11,4 +11,8 @@ import com.colon.mattfolio.database.token.entity.TokenEntity;
 public interface TokenRepository extends CrudRepository<TokenEntity, String> {
 
     Optional<TokenEntity> findByAccessToken(String accessToken);
+
+    Optional<TokenEntity> findByRefreshToken(String refreshToken);
+
+    Optional<TokenEntity> findByUserId(String userId);
 }

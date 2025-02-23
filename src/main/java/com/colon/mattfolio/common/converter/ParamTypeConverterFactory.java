@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class ParamTypeConverterFactory implements ConverterFactory<String, Enum> {
 
     @Override

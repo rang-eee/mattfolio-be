@@ -70,7 +70,7 @@ public class TokenProvider {
             .claim(KEY_ROLE, authorities)
             .issuedAt(now)
             .expiration(expiredDate)
-            .signWith(secretKey, Jwts.SIG.HS512)
+            // .signWith(secretKey, Jwts.SIG.HS512)
             .compact();
     }
 
