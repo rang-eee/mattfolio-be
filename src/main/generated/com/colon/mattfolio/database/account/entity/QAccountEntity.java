@@ -31,7 +31,7 @@ public class QAccountEntity extends EntityPathBase<AccountEntity> {
 
     public final StringPath email = createString("email");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final StringPath id = createString("id");
 
     public final StringPath memberKey = createString("memberKey");
 

@@ -36,7 +36,7 @@ public class AccountService {
             .orElseThrow(() -> new AccountException(MEMBER_NOT_FOUND));
     }
 
-    private AccountEntity findByEmail(String email) {
+    public AccountEntity findByEmail(String email) {
         return accountRepository.findByEmail(email)
             .orElse(null);
     }

@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.time.Duration;
 
 import javax.crypto.SecretKey;
 
@@ -19,6 +20,7 @@ import org.springframework.util.StringUtils;
 import com.colon.mattfolio.api.auth.service.TokenService;
 import com.colon.mattfolio.common.exception.ErrorCode;
 import com.colon.mattfolio.common.exception.TokenException;
+import com.colon.mattfolio.database.account.entity.AccountEntity;
 import com.colon.mattfolio.database.token.entity.TokenEntity;
 
 import io.jsonwebtoken.Claims;
@@ -126,4 +128,22 @@ public class TokenProvider {
             throw new TokenException(ErrorCode.INVALID_JWT_SIGNATURE);
         }
     }
+
+    public String generateToken(AccountEntity account, Duration duration) {
+        Date now = new Date();
+        Date expiredDate = new Date(now.getTime() + duration.toMillis());
+
+        // 단일 Role 값을 문자열로 변환
+        String authority = account.getRole()
+            .name();
+
+        return Jwts.builder()
+            .subject(account.getEmail()) // 또는 account.getName() 사용 가능
+            .claim(KEY_ROLE, authority)
+            .issuedAt(now)
+            .expiration(expiredDate)
+            // .signWith(secretKey, SignatureAlgorithm.HS512) // secretKey와 SignatureAlgorithm 설정 필요
+            .compact();
+    }
+
 }

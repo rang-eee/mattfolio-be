@@ -21,9 +21,9 @@ public class QTokenEntity extends EntityPathBase<TokenEntity> {
 
     public final StringPath accessToken = createString("accessToken");
 
-    public final StringPath id = createString("id");
-
     public final StringPath refreshToken = createString("refreshToken");
+
+    public final StringPath userId = createString("userId");
 
     public QTokenEntity(String variable) {
         super(TokenEntity.class, forVariable(variable));

@@ -1,7 +1,5 @@
 package com.colon.mattfolio.common.config;
 
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -36,9 +34,18 @@ public class WebOAuthSecurityConfig {
 	// 스프링 시큐리티 기능 비활성화
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring()
-			.requestMatchers(toH2Console())
-			.requestMatchers("/img/**", "/css/**", "/js/**");
+		return web -> web.ignoring()
+			.requestMatchers("/error", //
+					"/favicon.ico", //
+					// "/v1/**", //
+					// "/auth/", //
+					"/swagger-ui.html", //
+					"/swagger-ui/**", //
+					"/swagger-resources/**", //
+					"/apidocs.html", //
+					"/apidocs", //
+					"/apidocs/**"//
+			);
 	}
 
 	@Bean
