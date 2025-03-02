@@ -20,26 +20,27 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "mf_account") // 원하는 테이블명 지정
+@Table(name = "MF_ACCOUNT") // 원하는 테이블명 지정
 public class AccountEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    @Column(name = "ID")
+    private Long id;
 
-    @Column(nullable = false, length = 10)
+    @Column(name = "NAME", nullable = false, length = 10)
     private String name;
 
-    @Column(nullable = false, length = 20, unique = true)
+    @Column(name = "EMAIL", nullable = false, length = 20, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "PROFILE", nullable = false)
     private String profile;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "MEMBER_KEY", nullable = false, unique = true)
     private String memberKey;
 
-    @Column(nullable = false)
+    @Column(name = "ROLE", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private Role role;
 

@@ -1,0 +1,58 @@
+# server settings
+server:
+  port: '3333'
+  url: http://localhost:${server.port}
+################################################
+
+
+# spring settings
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-secret: UtfKwn30puMtgY9Tk9vkRq792o4XiiXN
+            redirect-uri: ${server.url}/login/oauth2/code/kakao
+            authorization-grant-type: authorization_code
+            client-id: efc1e0b49434d89db4eec451305df348
+            scope: profile_nickname, account_email
+            client-name: kakao
+            client-authentication-method: client_secret_post
+        provider:
+          kakao:
+            user-name-attribute: id
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+  datasource:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    password: dlqjarb1!
+    username: beomgyu7832
+    url: jdbc:log4jdbc:mariadb://velysound.com:3306/beomgyu7832
+################################################
+
+
+# spring settings
+springdoc:
+  swagger-ui:
+    enabled: 'true'
+################################################
+
+
+# logging settings
+logging:
+  level:
+    org:
+      springframework:
+        nodeValue: debug
+        security:
+          web: debug
+    root: debug
+    com:
+      colon:
+        mattfolio: debug
+    web: debug
+  config: classpath:logger/logback-local.xml
+################################################
+

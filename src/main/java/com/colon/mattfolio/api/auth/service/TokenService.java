@@ -18,12 +18,12 @@ public class TokenService {
 
     private final TokenRepository tokenRepository;
 
-    public void deleteRefreshToken(String memberKey) {
+    public void deleteRefreshToken(Long memberKey) {
         tokenRepository.deleteById(memberKey);
     }
 
     @Transactional
-    public void saveOrUpdate(String memberKey, String refreshToken, String accessToken) {
+    public void saveOrUpdate(Long memberKey, String refreshToken, String accessToken) {
         TokenEntity token = tokenRepository.findByAccessToken(accessToken)
             .map(o -> o.updateRefreshToken(refreshToken))
             .orElseGet(() -> new TokenEntity(memberKey, refreshToken, accessToken));

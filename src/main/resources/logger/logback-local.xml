@@ -2,7 +2,7 @@
 <configuration>
     
     <!-- 프로퍼티 파일 -->
-    <property resource="application.properties"/>
+    <property resource="logger/logback-local.properties"/>
     <!-- 로그 파일 경로 : 프로퍼티 참조 -->
     <property name="LOG_PATH" value="${log.path}"/>
     <!-- 로그 파일 명 : 프로퍼티 참조 -->

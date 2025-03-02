@@ -23,7 +23,7 @@ public class QTokenEntity extends EntityPathBase<TokenEntity> {
 
     public final StringPath refreshToken = createString("refreshToken");
 
-    public final StringPath userId = createString("userId");
+    public final NumberPath<Long> userId = createNumber("userId", Long.class);
 
     public QTokenEntity(String variable) {
         super(TokenEntity.class, forVariable(variable));

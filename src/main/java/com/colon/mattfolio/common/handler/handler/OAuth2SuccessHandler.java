@@ -17,7 +17,6 @@ import com.colon.mattfolio.database.token.entity.TokenEntity;
 import com.colon.mattfolio.database.token.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.colon.mattfolio.database.token.repository.TokenRepository;
 import com.colon.mattfolio.util.CookieUtil;
-import com.nimbusds.oauth2.sdk.token.RefreshToken;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -59,7 +58,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     // 생성된 리프레시 토큰을 전달받아 데이터베이스에 저장
-    private void saveRefreshToken(String userId, String newRefreshToken) {
+    private void saveRefreshToken(Long userId, String newRefreshToken) {
         TokenEntity refreshToken = tokenRepository.findByUserId(userId)
             .map(entity -> entity.updateRefreshToken(newRefreshToken))
             .orElse(TokenEntity.builder()

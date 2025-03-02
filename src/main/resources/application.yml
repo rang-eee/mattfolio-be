@@ -1,0 +1,86 @@
+# spring settings
+spring:
+  ################################################
+  # Spring Profile
+  # local 개발 시 local
+  # 운영서버 배포시 prd
+  # **배포시 반드시 prd로
+  ################################################
+  profiles:
+    active: local
+  ################################################
+  
+  main:
+    allow-bean-definition-overriding: 'true'
+  servlet:
+    multipart:
+      enabled: 'true'
+      max-file-size: 1GB
+      max-request-size: 1GB
+      file-size-threshold: '0'
+  application:
+    name: mattfolio
+  web:
+    resources:
+      add-mappings: 'true'
+  output:
+    ansi:
+      enabled: always
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: 'false'
+      
+  # DB settings
+  datasource:
+    hikari:
+      maxLifetime: '570000'
+      minimumIdle: '5'
+      autoCommit: 'false'
+      maximumPoolSize: '5'
+  ################################################
+  
+  # jpa settings
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: '500'
+        jdbc:
+          batch_size: '1000'
+        format_sql: 'true'
+        order_updates: 'true'
+        order_inserts: 'true'
+        show_sql: 'true'
+    hibernate:
+      ddl-auto: update
+    database: mysql
+    open-in-view: 'false'
+  ################################################
+################################################
+
+# springdoc settings
+springdoc:
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    doc-expansion: none
+    path: /apidocs.html
+    title: Mattfolio Rest API document
+    urls-primary-name: V1 - Non Security Open Api
+    apiVersion: '1.0'
+    description: '[B@195dcf37'
+    operations-sorter: alpha
+  api-docs:
+    path: /apidocs
+  default-consumes-media-type: application/json;charset=UTF-8
+  cache:
+    disabled: 'false'
+################################################
+
+# multipart settings
+multipart:
+  enabled: 'true'
+################################################
+
+# jwt settings
+jwt:
+  key: c3ByaW5nLWJvb3QtYXBpLWp3dC1zZWNyZXQta2V5LXN1cGVyLXNlY3JldC15ZXMteWVzLXllcy0yNAo=
+################################################

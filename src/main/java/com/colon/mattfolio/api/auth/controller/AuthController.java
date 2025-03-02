@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 // @CrossOrigin(origins = "http://about:blank")
 @RestController("/auth")
 @RequiredArgsConstructor
-public class Oauth2LoginController {
+public class AuthController {
 
     final Log logger = LogFactory.getLog(getClass());
 

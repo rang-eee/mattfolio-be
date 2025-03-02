@@ -19,7 +19,7 @@ public class TokenEntity {
 
     @Id
     @Column(nullable = false)
-    private String userId;
+    private Long userId;
 
     @Column(nullable = false)
     private String refreshToken;
