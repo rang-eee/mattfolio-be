@@ -19,22 +19,22 @@ import lombok.RequiredArgsConstructor;
 public class AccountService {
     private final AccountRepository accountRepository;
 
-    public AccountDto memberInfo(String memberKey) {
-        AccountEntity member = findByMemberKeyOrThrow(memberKey);
-        return AccountDto.fromEntity(member);
-    }
+    // public AccountDto memberInfo(String memberKey) {
+    // AccountEntity member = findByMemberKeyOrThrow(memberKey);
+    // return AccountDto.fromEntity(member);
+    // }
 
-    @Transactional
-    public AccountDto memberEdit(MemberEditRequest request, String memberKey) {
-        AccountEntity member = findByMemberKeyOrThrow(memberKey);
-        member.updateMember(request);
-        return AccountDto.fromEntity(member);
-    }
+    // @Transactional
+    // public AccountDto memberEdit(MemberEditRequest request, String memberKey) {
+    // AccountEntity member = findByMemberKeyOrThrow(memberKey);
+    // member.updateMember(request);
+    // return AccountDto.fromEntity(member);
+    // }
 
-    private AccountEntity findByMemberKeyOrThrow(String memberKey) {
-        return accountRepository.findByMemberKey(memberKey)
-            .orElseThrow(() -> new AccountException(MEMBER_NOT_FOUND));
-    }
+    // private AccountEntity findByMemberKeyOrThrow(String memberKey) {
+    // return accountRepository.findByMemberKey(memberKey)
+    // .orElseThrow(() -> new AccountException(MEMBER_NOT_FOUND));
+    // }
 
     public AccountEntity findByEmail(String email) {
         return accountRepository.findByEmail(email)

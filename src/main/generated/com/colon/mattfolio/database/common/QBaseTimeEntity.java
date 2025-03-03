@@ -19,7 +19,11 @@ public class QBaseTimeEntity extends EntityPathBase<BaseTimeEntity> {
 
     public static final QBaseTimeEntity baseTimeEntity = new QBaseTimeEntity("baseTimeEntity");
 
+    public final NumberPath<Long> createdAccountId = createNumber("createdAccountId", Long.class);
+
     public final DateTimePath<java.time.LocalDateTime> createdDate = createDateTime("createdDate", java.time.LocalDateTime.class);
+
+    public final NumberPath<Long> modifiedAccountId = createNumber("modifiedAccountId", Long.class);
 
     public final DateTimePath<java.time.LocalDateTime> modifiedDate = createDateTime("modifiedDate", java.time.LocalDateTime.class);
 

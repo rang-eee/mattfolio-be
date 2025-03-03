@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -18,51 +17,52 @@ public class QAccountEntity extends EntityPathBase<AccountEntity> {
 
     private static final long serialVersionUID = 1607755876L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QAccountEntity accountEntity = new QAccountEntity("accountEntity");
 
     public final com.colon.mattfolio.database.common.QBaseTimeEntity _super = new com.colon.mattfolio.database.common.QBaseTimeEntity(this);
 
-    public final QAddressEntity address;
+    public final NumberPath<Long> accountId = createNumber("accountId", Long.class);
+
+    public final NumberPath<Integer> age = createNumber("age", Integer.class);
+
+    public final EnumPath<com.colon.mattfolio.common.enumType.LoginAuthProvider> authProvider = createEnum("authProvider", com.colon.mattfolio.common.enumType.LoginAuthProvider.class);
+
+    //inherited
+    public final NumberPath<Long> createdAccountId = _super.createdAccountId;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
 
     public final StringPath email = createString("email");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    public final StringPath gender = createString("gender");
 
-    public final StringPath memberKey = createString("memberKey");
+    //inherited
+    public final NumberPath<Long> modifiedAccountId = _super.modifiedAccountId;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
 
     public final StringPath name = createString("name");
 
-    public final StringPath profile = createString("profile");
+    public final StringPath nickname = createString("nickname");
 
-    public final EnumPath<Role> role = createEnum("role", Role.class);
+    public final StringPath profileImgUrl = createString("profileImgUrl");
+
+    public final StringPath providerId = createString("providerId");
+
+    public final EnumPath<com.colon.mattfolio.common.enumType.AccountRoleType> role = createEnum("role", com.colon.mattfolio.common.enumType.AccountRoleType.class);
 
     public QAccountEntity(String variable) {
-        this(AccountEntity.class, forVariable(variable), INITS);
+        super(AccountEntity.class, forVariable(variable));
     }
 
     public QAccountEntity(Path<? extends AccountEntity> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QAccountEntity(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QAccountEntity(PathMetadata metadata, PathInits inits) {
-        this(AccountEntity.class, metadata, inits);
-    }
-
-    public QAccountEntity(Class<? extends AccountEntity> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.address = inits.isInitialized("address") ? new QAddressEntity(forProperty("address")) : null;
+        super(AccountEntity.class, metadata);
     }
 
 }

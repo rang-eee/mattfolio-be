@@ -20,10 +20,19 @@ public abstract class BaseTimeEntity {
 
     @JsonIgnore
     @CreatedDate
+    @Column(name = "CREATED_DATE")
     private LocalDateTime createdDate;
 
     @JsonIgnore
+    @Column(name = "CREATED_ACCOUNT_ID")
+    private Long createdAccountId;
+
+    @JsonIgnore
     @LastModifiedDate
-    @Column(insertable = false)
+    @Column(insertable = false, name = "MODIFIED_DATE")
     private LocalDateTime modifiedDate;
+
+    @JsonIgnore
+    @Column(name = "MODIFIED_ACCOUNT_ID")
+    private Long modifiedAccountId;
 }

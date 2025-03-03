@@ -21,17 +21,17 @@ import lombok.RequiredArgsConstructor;
 @RestController
 public class AccountController {
 
-	private final AccountService accountService;
+    private final AccountService accountService;
 
-	@RoleUser
-	@GetMapping
-	public ResponseEntity<AccountDto> memberInfo(@AuthenticationPrincipal UserDetails userDetails) {
-		return ResponseEntity.ok(accountService.memberInfo(userDetails.getUsername()));
-	}
+    // @RoleUser
+    // @GetMapping
+    // public ResponseEntity<AccountDto> memberInfo(@AuthenticationPrincipal UserDetails userDetails) {
+    // return ResponseEntity.ok(accountService.memberInfo(userDetails.getUsername()));
+    // }
 
-	@RoleUser
-	@PatchMapping
-	public ResponseEntity<AccountDto> memberEdit(@RequestBody @Valid MemberEditRequest request, @AuthenticationPrincipal UserDetails userDetails) {
-		return ResponseEntity.ok(accountService.memberEdit(request, userDetails.getUsername()));
-	}
+    // @RoleUser
+    // @PatchMapping
+    // public ResponseEntity<AccountDto> memberEdit(@RequestBody @Valid MemberEditRequest request, @AuthenticationPrincipal UserDetails userDetails) {
+    // return ResponseEntity.ok(accountService.memberEdit(request, userDetails.getUsername()));
+    // }
 }

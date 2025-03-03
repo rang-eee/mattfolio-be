@@ -5,14 +5,14 @@ import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.colon.mattfolio.database.token.entity.TokenEntity;
+import com.colon.mattfolio.database.token.entity.AccountTokenEntity;
 
 @Repository
-public interface TokenRepository extends CrudRepository<TokenEntity, Long> {
+public interface TokenRepository extends CrudRepository<AccountTokenEntity, Long> {
 
-    Optional<TokenEntity> findByAccessToken(String accessToken);
+    Optional<AccountTokenEntity> findByAccessToken(String accessToken);
 
-    Optional<TokenEntity> findByRefreshToken(String refreshToken);
+    Optional<AccountTokenEntity> findByRefreshToken(String refreshToken);
 
-    Optional<TokenEntity> findByUserId(Long userId);
+    Optional<AccountTokenEntity> findByUserId(Long userId);
 }

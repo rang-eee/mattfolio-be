@@ -7,7 +7,7 @@ spring:
   # **배포시 반드시 prd로
   ################################################
   profiles:
-    active: local
+    active: local, oauth2
   ################################################
   
   main:
@@ -52,6 +52,9 @@ spring:
         show_sql: 'true'
     hibernate:
       ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
     database: mysql
     open-in-view: 'false'
   ################################################

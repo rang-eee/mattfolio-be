@@ -1,72 +1,69 @@
 package com.colon.mattfolio.database.account.entity;
 
 import com.colon.mattfolio.api.account.dto.MemberEditRequest;
+import com.colon.mattfolio.common.enumType.AccountRoleType;
+import com.colon.mattfolio.common.enumType.LoginAuthProvider;
 import com.colon.mattfolio.database.common.BaseTimeEntity;
 
-import jakarta.persistence.Table;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Entity
-@Table(name = "MF_ACCOUNT") // 원하는 테이블명 지정
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "MF_ACCOUNT")
 public class AccountEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private Long id;
+    @Column(name = "ACCOUNT_ID")
+    private Long accountId;
 
-    @Column(name = "NAME", nullable = false, length = 10)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "AUTH_PROVIDER", nullable = true)
+    private LoginAuthProvider authProvider;
 
-    @Column(name = "EMAIL", nullable = false, length = 20, unique = true)
+    @Column(name = "PROVIDER_ID", nullable = false, length = 20)
+    private String providerId;
+
+    @Column(name = "EMAIL", nullable = true, length = 50)
     private String email;
 
-    @Column(name = "PROFILE", nullable = false)
-    private String profile;
+    @Column(name = "NAME", nullable = true, length = 30)
+    private String name;
 
-    @Column(name = "MEMBER_KEY", nullable = false, unique = true)
-    private String memberKey;
+    @Column(name = "NICKNAME", nullable = true, length = 30)
+    private String nickname;
+
+    @Column(name = "PROFILE", nullable = true)
+    private String profileImgUrl;
+
+    @Column(name = "GENDER", nullable = true)
+    private String gender;
+
+    @Column(name = "AGE", nullable = true)
+    private Integer age;
 
     @Column(name = "ROLE", nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private Role role;
-
-    @Embedded
-    private AddressEntity address;
-
-    @Builder
-    public AccountEntity(String name, String email, String profile, String memberKey, Role role) {
-        this.name = name;
-        this.email = email;
-        this.profile = profile;
-        this.memberKey = memberKey;
-        this.role = role;
-    }
-
-    public void addAddress(AddressEntity address) {
-        this.address = address;
-    }
+    private AccountRoleType role;
 
     public void updateMember(MemberEditRequest request) {
-        this.name = request.name();
 
-        if (request.address() != null) {
-            this.address = request.address()
-                .toEntity();
-        }
+        this.name = request.name();
     }
 
     public AccountEntity update(String name) {

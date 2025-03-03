@@ -12,13 +12,13 @@ import com.colon.mattfolio.model.common.ApiResultDto;
 
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping("/v1/api/example")
+// @RequestMapping("/v1/api/example")
 @RequiredArgsConstructor
 @RestController
 public class ExampleController extends MasterController {
 
 	// @RoleUser
-	@GetMapping
+	@GetMapping("/api/example")
 	// public ApiResultDto<String> memberInfo(@AuthenticationPrincipal UserDetails userDetails) {
 	public ApiResultDto<String> memberInfo() {
 		ApiResultDto<String> apiResultVo = new ApiResultDto<>(); // API 응답 객체
@@ -33,7 +33,7 @@ public class ExampleController extends MasterController {
 	}
 
 	@RoleUser
-	@GetMapping("/detail")
+	@GetMapping("/v1/api/example/detail")
 	public ApiResultDto<String> getAccountDetail(@AuthenticationPrincipal UserDetails userDetails) {
 		ApiResultDto<String> apiResultVo = new ApiResultDto<>(); // API 응답 객체
 
