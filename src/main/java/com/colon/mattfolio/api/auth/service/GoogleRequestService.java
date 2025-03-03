@@ -48,7 +48,7 @@ public class GoogleRequestService implements RequestService<GoogleUserInfo> {
         RefreshTokenResponse tokenResponse = getToken(tokenRequest);
         GoogleUserInfo googleUserInfo = getUserInfo(tokenResponse.getAccessToken());
 
-        if (accountRepository.existsByAuthProviderAndProviderId(LoginAuthProvider.GOOGLE, googleUserInfo.getId())) {
+        if (accountRepository.existsByLoginAuthProviderAndLoginAuthProviderId(LoginAuthProvider.GOOGLE, googleUserInfo.getId())) {
             String accessToken = authUtil.createAccessToken(googleUserInfo.getId(), LoginAuthProvider.GOOGLE, tokenResponse.getAccessToken());
             String refreshToken = authUtil.createRefreshToken(googleUserInfo.getId(), LoginAuthProvider.GOOGLE, tokenResponse.getRefreshToken());
             return SignInResponse.builder()

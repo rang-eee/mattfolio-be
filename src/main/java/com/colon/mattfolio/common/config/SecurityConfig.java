@@ -9,7 +9,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.colon.mattfolio.api.account.AccountService;
 import com.colon.mattfolio.common.auth.SecurityAuthenticationFailEntryPoint;
 import com.colon.mattfolio.common.auth.SecurityTokenAuthenticationFilter;
 import com.colon.mattfolio.common.auth.SecurityTokenExceptionFilter;
@@ -17,7 +16,8 @@ import com.colon.mattfolio.common.auth.jwt.TokenProvider;
 import com.colon.mattfolio.common.auth.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import com.colon.mattfolio.common.auth.oauth.OAuth2SuccessHandler;
 import com.colon.mattfolio.common.auth.oauth.OAuth2UserCustomService;
-import com.colon.mattfolio.database.token.repository.TokenRepository;
+import com.colon.mattfolio.database.account.repository.AccountRepository;
+import com.colon.mattfolio.database.token.repository.AccountTokenRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,8 +41,8 @@ public class SecurityConfig {
 	// OAuth2 사용자 관련 서비스, 토큰 제공자, 토큰 저장소, 계정 서비스 주입
 	private final OAuth2UserCustomService oAuth2UserCustomService;
 	private final TokenProvider tokenProvider;
-	private final TokenRepository tokenRepository;
-	private final AccountService accountService;
+	private final AccountTokenRepository tokenRepository;
+	private final AccountRepository accountRepository;
 
 	// TokenAuthenticationFilter를 생성자 주입 받음 (순환 참조 주의)
 	private final SecurityTokenAuthenticationFilter tokenAuthenticationFilter;
@@ -134,7 +134,7 @@ public class SecurityConfig {
 	 */
 	@Bean
 	public OAuth2SuccessHandler oAuth2SuccessHandler() {
-		return new OAuth2SuccessHandler(tokenProvider, tokenRepository, oAuth2AuthorizationRequestBasedOnCookieRepository(), accountService);
+		return new OAuth2SuccessHandler(tokenProvider, tokenRepository, accountRepository, oAuth2AuthorizationRequestBasedOnCookieRepository());
 	}
 
 	/**

@@ -23,10 +23,6 @@ public class QAccountEntity extends EntityPathBase<AccountEntity> {
 
     public final NumberPath<Long> accountId = createNumber("accountId", Long.class);
 
-    public final NumberPath<Integer> age = createNumber("age", Integer.class);
-
-    public final EnumPath<com.colon.mattfolio.common.enumType.LoginAuthProvider> authProvider = createEnum("authProvider", com.colon.mattfolio.common.enumType.LoginAuthProvider.class);
-
     //inherited
     public final NumberPath<Long> createdAccountId = _super.createdAccountId;
 
@@ -35,7 +31,9 @@ public class QAccountEntity extends EntityPathBase<AccountEntity> {
 
     public final StringPath email = createString("email");
 
-    public final StringPath gender = createString("gender");
+    public final EnumPath<com.colon.mattfolio.common.enumType.LoginAuthProvider> loginAuthProvider = createEnum("loginAuthProvider", com.colon.mattfolio.common.enumType.LoginAuthProvider.class);
+
+    public final StringPath loginAuthProviderId = createString("loginAuthProviderId");
 
     //inherited
     public final NumberPath<Long> modifiedAccountId = _super.modifiedAccountId;
@@ -45,11 +43,7 @@ public class QAccountEntity extends EntityPathBase<AccountEntity> {
 
     public final StringPath name = createString("name");
 
-    public final StringPath nickname = createString("nickname");
-
     public final StringPath profileImgUrl = createString("profileImgUrl");
-
-    public final StringPath providerId = createString("providerId");
 
     public final EnumPath<com.colon.mattfolio.common.enumType.AccountRoleType> role = createEnum("role", com.colon.mattfolio.common.enumType.AccountRoleType.class);
 

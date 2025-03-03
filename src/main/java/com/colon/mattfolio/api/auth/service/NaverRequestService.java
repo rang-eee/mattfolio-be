@@ -45,7 +45,7 @@ public class NaverRequestService implements RequestService<NaverUserInfo> {
         RefreshTokenResponse tokenResponse = getToken(tokenRequest);
         NaverUserInfo naverUserInfo = getUserInfo(tokenResponse.getAccessToken());
 
-        if (accountRepository.existsByAuthProviderAndProviderId(LoginAuthProvider.GOOGLE, naverUserInfo.getResponse()
+        if (accountRepository.existsByLoginAuthProviderAndLoginAuthProviderId(LoginAuthProvider.GOOGLE, naverUserInfo.getResponse()
             .getId())) {
             String accessToken = authUtil.createAccessToken(naverUserInfo.getResponse()
                 .getId(), LoginAuthProvider.NAVER, tokenResponse.getAccessToken());

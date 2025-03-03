@@ -13,10 +13,10 @@ import com.colon.mattfolio.api.auth.dto.RefreshTokenRequest;
 import com.colon.mattfolio.api.auth.dto.SignInResponse;
 import com.colon.mattfolio.api.auth.service.AuthService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-// @CrossOrigin(origins = "http://about:blank")
-@RestController("/auth")
+@RestController
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -40,6 +40,11 @@ public class AuthController {
                 .refreshToken(null)
                 .build());
         }
+    }
+
+    @GetMapping("/auth/success")
+    public ResponseEntity<SignInResponse> loginSuccess(@Valid SignInResponse loginResponse) {
+        return ResponseEntity.ok(loginResponse);
     }
 
     @PostMapping("/auth/token")

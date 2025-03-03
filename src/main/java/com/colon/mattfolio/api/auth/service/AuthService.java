@@ -46,7 +46,7 @@ public class AuthService {
         String oldRefreshToken = (String) authUtil.get(tokenRequest.getRefreshToken())
             .get("refreshToken");
 
-        if (!accountRepository.existsByAuthProviderAndProviderId(LoginAuthProvider.findByCode(provider), userId)) {
+        if (!accountRepository.existsByLoginAuthProviderAndLoginAuthProviderId(LoginAuthProvider.findByCode(provider), userId)) {
             throw new BadRequestException("CANNOT_FOUND_USER");
         }
 
