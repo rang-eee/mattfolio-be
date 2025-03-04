@@ -1,4 +1,4 @@
-package com.colon.mattfolio.database.token.entity;
+package com.colon.mattfolio.database.account.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -15,7 +15,7 @@ import com.querydsl.core.types.Path;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QAccountTokenEntity extends EntityPathBase<AccountTokenEntity> {
 
-    private static final long serialVersionUID = 1013035175L;
+    private static final long serialVersionUID = -818442405L;
 
     public static final QAccountTokenEntity accountTokenEntity = new QAccountTokenEntity("accountTokenEntity");
 

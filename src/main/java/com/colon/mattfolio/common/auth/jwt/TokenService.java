@@ -5,8 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.colon.mattfolio.common.exception.ErrorCode;
 import com.colon.mattfolio.common.exception.TokenException;
-import com.colon.mattfolio.database.token.entity.AccountTokenEntity;
-import com.colon.mattfolio.database.token.repository.AccountTokenRepository;
+import com.colon.mattfolio.database.account.entity.AccountTokenEntity;
+import com.colon.mattfolio.database.account.repository.AccountTokenRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

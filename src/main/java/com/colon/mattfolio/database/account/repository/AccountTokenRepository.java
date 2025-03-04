@@ -1,9 +1,10 @@
-package com.colon.mattfolio.database.token.repository;
+package com.colon.mattfolio.database.account.repository;
 
 import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import com.colon.mattfolio.database.token.entity.AccountTokenEntity;
+
+import com.colon.mattfolio.database.account.entity.AccountTokenEntity;
 
 /**
  * AccountTokenRepository 인터페이스는 AccountTokenEntity에 대한 CRUD 작업을 수행하기 위해 CrudRepository를 확장합니다. <br/>

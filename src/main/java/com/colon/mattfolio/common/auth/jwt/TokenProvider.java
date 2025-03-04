@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
 import com.colon.mattfolio.common.exception.ErrorCode;
 import com.colon.mattfolio.common.exception.TokenException;
 import com.colon.mattfolio.database.account.entity.AccountEntity;
-import com.colon.mattfolio.database.token.entity.AccountTokenEntity;
+import com.colon.mattfolio.database.account.entity.AccountTokenEntity;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

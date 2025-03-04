@@ -17,7 +17,7 @@ import com.colon.mattfolio.common.auth.oauth.OAuth2AuthorizationRequestBasedOnCo
 import com.colon.mattfolio.common.auth.oauth.OAuth2SuccessHandler;
 import com.colon.mattfolio.common.auth.oauth.OAuth2UserCustomService;
 import com.colon.mattfolio.database.account.repository.AccountRepository;
-import com.colon.mattfolio.database.token.repository.AccountTokenRepository;
+import com.colon.mattfolio.database.account.repository.AccountTokenRepository;
 
 import lombok.RequiredArgsConstructor;
 
