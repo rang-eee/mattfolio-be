@@ -22,11 +22,18 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @GetMapping("/oauth/{provider}")
+    public ResponseEntity<SignInResponse> signIn(//
+            @PathVariable("provider") String provider, //
+            @RequestParam("code") String code) {
+        return ResponseEntity.ok(null);
+    }
+
     @GetMapping("/login/oauth2/code/{registrationId}")
     public ResponseEntity<SignInResponse> redirect(//
             @PathVariable("registrationId") String registrationId, //
             @RequestParam("code") String code, //
-            @RequestParam("state") String state) {
+            @RequestParam(value = "state", required = false) String state) {
         try {
             return ResponseEntity.ok(authService.redirect(RefreshTokenRequest.builder()
                 .registrationId(registrationId)

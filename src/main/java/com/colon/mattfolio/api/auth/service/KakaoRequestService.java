@@ -40,6 +40,9 @@ public class KakaoRequestService implements RequestService<KakaoUserInfo> {
     @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
     private String TOKEN_URI;
 
+    @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
+    private String USER_INFO_URI;
+
     @Override
     public SignInResponse redirect(RefreshTokenRequest tokenRequest) {
 
@@ -51,7 +54,7 @@ public class KakaoRequestService implements RequestService<KakaoUserInfo> {
             String refreshToken = authUtil.createRefreshToken(String.valueOf(kakaoUserInfo.getId()), LoginAuthProvider.KAKAO, tokenResponse.getRefreshToken());
             return SignInResponse.builder()
                 .authProvider(LoginAuthProvider.KAKAO)
-                .kakaoUserInfo(null)
+                .kakaoUserInfo(kakaoUserInfo)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
@@ -87,10 +90,10 @@ public class KakaoRequestService implements RequestService<KakaoUserInfo> {
     @Override
     public KakaoUserInfo getUserInfo(String accessToken) {
         return webClient.mutate()
-            .baseUrl("https://kapi.kakao.com")
+            .baseUrl(USER_INFO_URI)
             .build()
             .get()
-            .uri("/v2/user/me")
+            // .uri("/v2/user/me")
             .headers(h -> h.setBearerAuth(accessToken))
             .retrieve()
             .bodyToMono(KakaoUserInfo.class)
@@ -106,10 +109,10 @@ public class KakaoRequestService implements RequestService<KakaoUserInfo> {
         formData.add("refresh_token", refreshToken);
 
         return webClient.mutate()
-            .baseUrl("https://kauth.kakao.com")
+            .baseUrl(TOKEN_URI)
             .build()
             .post()
-            .uri("/oauth/token")
+            // .uri("/oauth/token")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(BodyInserters.fromFormData(formData))
             .retrieve()
