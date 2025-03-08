@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 
-import com.colon.mattfolio.common.property.MessageProperties;
+import com.colon.mattfolio.common.property.Message;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -234,7 +234,7 @@ public class Validator implements ConstraintValidator<Validation, Object> {
     private String getMessage(String key, Object... args) {
         if (isMessageKey(key)) {
             String actualKey = key.substring(1, key.length() - 1); // Remove { and }
-            return MessageProperties.getMessage(actualKey, args);
+            return Message.getMessage(actualKey, args);
         }
         return key; // Directly return if it's not a key
     }

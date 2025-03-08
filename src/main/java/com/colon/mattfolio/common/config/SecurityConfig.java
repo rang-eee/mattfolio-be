@@ -8,6 +8,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.colon.mattfolio.common.auth.SecurityAuthenticationFailEntryPoint;
 import com.colon.mattfolio.common.auth.SecurityTokenAuthenticationFilter;
@@ -82,6 +85,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
         // CSRF, HTTP 기본 인증, 폼 로그인, 로그아웃 비활성화
         http.csrf(csrf -> csrf.disable())
             .httpBasic(httpBasic -> httpBasic.disable())
@@ -124,6 +129,27 @@ public class SecurityConfig {
 
         // 최종적으로 구성된 SecurityFilterChain을 반환
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // configuration.addAllowedOriginPattern("*"); // 🔥 모든 도메인 허용 (allowedOrigins("*") 대신 사용)
+        configuration.addAllowedOrigin("http://localhost:3000");
+
+        configuration.addAllowedMethod("GET");
+        configuration.addAllowedMethod("POST");
+        configuration.addAllowedMethod("PUT");
+        configuration.addAllowedMethod("DELETE");
+        configuration.addAllowedMethod("OPTIONS");
+        configuration.addAllowedHeader("Authorization");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     /**

@@ -21,7 +21,8 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
-import com.colon.mattfolio.common.property.MessageProperties;
+import com.colon.mattfolio.common.exception.MasterException;
+import com.colon.mattfolio.common.property.Message;
 import com.colon.mattfolio.model.common.ApiResultDto;
 
 import jakarta.servlet.http.Cookie;
@@ -56,7 +57,7 @@ public class HandleExceptionController {
 
         ApiResultDto<Void> result = new ApiResultDto<>();
         result.setResultCode(994);
-        result.setRawResultMessage(MessageProperties.getMessage("common.proc.failed.uploadSize"));
+        result.setRawResultMessage(Message.getMessage("common.proc.failed.uploadSize"));
 
         return new ResponseEntity<>(result, HttpStatus.PAYLOAD_TOO_LARGE);
     }
@@ -220,6 +221,8 @@ public class HandleExceptionController {
      */
     @ExceptionHandler
     public ResponseEntity<ApiResultDto<Void>> handleException(HttpServletRequest request, Exception exception) {
+        exception.printStackTrace();
+
         String logContent = getRequestInfo(request, exception);
         log.error(logContent);
 

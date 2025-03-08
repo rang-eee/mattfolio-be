@@ -8,7 +8,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.colon.mattfolio.api.auth.dto.RefreshTokenRequest;
+import com.colon.mattfolio.api.auth.dto.SignInRequest;
 import com.colon.mattfolio.api.auth.dto.RefreshTokenResponse;
 import com.colon.mattfolio.api.auth.dto.SignInResponse;
 import com.colon.mattfolio.common.auth.AuthUtil;
@@ -44,7 +44,7 @@ public class GoogleRequestService implements RequestService<GoogleUserInfo> {
     private String REDIRECT_URI;
 
     @Override
-    public SignInResponse redirect(RefreshTokenRequest tokenRequest) {
+    public SignInResponse redirect(SignInRequest tokenRequest) {
         RefreshTokenResponse tokenResponse = getToken(tokenRequest);
         GoogleUserInfo googleUserInfo = getUserInfo(tokenResponse.getAccessToken());
 
@@ -65,7 +65,7 @@ public class GoogleRequestService implements RequestService<GoogleUserInfo> {
     }
 
     @Override
-    public RefreshTokenResponse getToken(RefreshTokenRequest tokenRequest) {
+    public RefreshTokenResponse getToken(SignInRequest tokenRequest) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("code", tokenRequest.getCode());
         formData.add("client_id", CLIENT_ID);

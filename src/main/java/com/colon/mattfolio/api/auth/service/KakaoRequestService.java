@@ -8,7 +8,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.colon.mattfolio.api.auth.dto.RefreshTokenRequest;
+import com.colon.mattfolio.api.auth.dto.SignInRequest;
 import com.colon.mattfolio.api.auth.dto.RefreshTokenResponse;
 import com.colon.mattfolio.api.auth.dto.SignInResponse;
 import com.colon.mattfolio.common.auth.AuthUtil;
@@ -44,7 +44,7 @@ public class KakaoRequestService implements RequestService<KakaoUserInfo> {
     private String USER_INFO_URI;
 
     @Override
-    public SignInResponse redirect(RefreshTokenRequest tokenRequest) {
+    public SignInResponse redirect(SignInRequest tokenRequest) {
 
         RefreshTokenResponse tokenResponse = getToken(tokenRequest);
         KakaoUserInfo kakaoUserInfo = getUserInfo(tokenResponse.getAccessToken());
@@ -58,16 +58,17 @@ public class KakaoRequestService implements RequestService<KakaoUserInfo> {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
-        } else {
+        } else { // 회원가입 필요
             return SignInResponse.builder()
                 .authProvider(LoginAuthProvider.KAKAO)
                 .kakaoUserInfo(kakaoUserInfo)
+                .needSignup(true)
                 .build();
         }
     }
 
     @Override
-    public RefreshTokenResponse getToken(RefreshTokenRequest tokenRequest) {
+    public RefreshTokenResponse getToken(SignInRequest tokenRequest) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("grant_type", GRANT_TYPE);
         formData.add("redirect_uri", REDIRECT_URI);

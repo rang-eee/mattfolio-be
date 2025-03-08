@@ -1,8 +1,7 @@
 package com.colon.mattfolio.common.exception;
 
-import com.colon.mattfolio.common.base.ApiResultCode;
 import com.colon.mattfolio.common.base.BaseReason;
-import com.colon.mattfolio.common.property.MessageProperties;
+import com.colon.mattfolio.common.property.Message;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,14 +24,15 @@ public class CommonException extends MasterException {
     @Getter
     @AllArgsConstructor
     public enum Reason implements BaseReason {
-        FAIL(ApiResultCode.Common.FAIL.getCode(), "common.proc.failed"), // 공통 - 서비스 로직 상의 오류
-        NOT_VALID(ApiResultCode.Common.NOT_VALID.getCode(), "common.proc.failed.notValid"), // HttpStatus 400 입력 값에 대한 유효성 검증을 통과하지 못한 케이스
-        REQUIRED_AUTHENTICATION(ApiResultCode.Common.REQUIRED_AUTHENTICATION.getCode(), "common.auth.required"), // HttpStatus 401(인증 필요) 에러 케이스
-        FORBIDDEN(ApiResultCode.Common.FORBIDDEN.getCode(), "common.auth.forbidden"), // HttpStatus 403(권한 없음) 에러 케이스
-        NOT_FOUND(ApiResultCode.Common.NOT_FOUND.getCode(), "common.proc.failed.invalidUrl"), // HttpStatus 404(존재하지 않는 리소스) 에러 케이스
-        METHOD_NOT_ALLOWED(ApiResultCode.Common.METHOD_NOT_ALLOWED.getCode(), "common.proc.failed.invalidMethod"), // HttpStatus 405(허용되지 않는 메소드) 에러 케이스
-        TOO_LARGE(ApiResultCode.Common.TOO_LARGE.getCode(), "common.proc.failed.uploadSize"), // HttpStatus 413(요청 데이터 용량 초과) 에러 케이스
-        UNSUPPORTED_TYPE(ApiResultCode.Common.UNSUPPORTED_TYPE.getCode(), "common.proc.failed.uploadSize"), // HttpStatus 415(지원하지 않는 콘텐츠 유형) 에러 케이스
+        SUCCESS(200, "common.proc.success"), // 공통 - 서비스 로직 상의 성공
+        FAIL(-500, "common.proc.failed"), // 공통 - 서비스 로직 상의 오류
+        NOT_VALID(-400, "common.proc.failed.notValid"), // HttpStatus 400 입력 값에 대한 유효성 검증을 통과하지 못한 케이스
+        REQUIRED_AUTHENTICATION(-401, "common.auth.required"), // HttpStatus 401(인증 필요) 에러 케이스
+        FORBIDDEN(-403, "common.auth.forbidden"), // HttpStatus 403(권한 없음) 에러 케이스
+        NOT_FOUND(-404, "common.proc.failed.invalidUrl"), // HttpStatus 404(존재하지 않는 리소스) 에러 케이스
+        METHOD_NOT_ALLOWED(-405, "common.proc.failed.invalidMethod"), // HttpStatus 405(허용되지 않는 메소드) 에러 케이스
+        TOO_LARGE(-413, "common.proc.failed.uploadSize"), // HttpStatus 413(요청 데이터 용량 초과) 에러 케이스
+        UNSUPPORTED_TYPE(-415, "common.proc.failed.uploadSize"), // HttpStatus 415(지원하지 않는 콘텐츠 유형) 에러 케이스
         ;
 
         private final Integer code; // 예외 코드
@@ -40,7 +40,7 @@ public class CommonException extends MasterException {
 
         @Override
         public String getMessage() {
-            return messageKey != null ? MessageProperties.getMessage(messageKey) : null;
+            return messageKey != null ? Message.getMessage(messageKey) : null;
         }
     }
 

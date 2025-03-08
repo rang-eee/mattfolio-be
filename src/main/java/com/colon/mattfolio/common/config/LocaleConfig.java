@@ -10,7 +10,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
-import com.colon.mattfolio.common.property.MessageProperties;
+import com.colon.mattfolio.common.property.Message;
 
 /**
  * 다국어 메시지 처리 관련 설정 클래스
@@ -32,6 +32,7 @@ public class LocaleConfig implements WebMvcConfigurer {
     LocaleResolver localeResolver() {
         AcceptHeaderLocaleResolver localeResolver = new AcceptHeaderLocaleResolver();
         localeResolver.setDefaultLocale(Locale.KOREA); // 기본 로케일을 한국으로 설정
+
         return localeResolver;
     }
 
@@ -47,7 +48,7 @@ public class LocaleConfig implements WebMvcConfigurer {
     @Bean(name = "messageSource")
     ReloadableResourceBundleMessageSource messageSource() {
         ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
-        source.setBasenames("classpath:/i18n/message"); // 다국어 메시지 파일 위치 설정
+        source.setBasenames("classpath:/messages/messages"); // 다국어 메시지 파일 위치 설정
         source.setDefaultEncoding("UTF-8"); // 메시지 파일 인코딩 설정
         return source;
     }
@@ -73,8 +74,8 @@ public class LocaleConfig implements WebMvcConfigurer {
      * @return Message 다국어 메시지 접근을 위한 빈
      */
     @Bean(name = "messageResolver")
-    MessageProperties messageResolver() {
-        MessageProperties.setMessageSourceAccessor(this.getMessageSourceAccessor());
-        return new MessageProperties();
+    Message messageResolver() {
+        Message.setMessageSourceAccessor(this.getMessageSourceAccessor());
+        return new Message();
     }
 }

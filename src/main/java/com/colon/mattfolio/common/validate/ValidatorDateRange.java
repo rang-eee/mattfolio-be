@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.colon.mattfolio.common.property.MessageProperties;
+import com.colon.mattfolio.common.property.Message;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -215,7 +215,7 @@ public class ValidatorDateRange implements ConstraintValidator<ValidationDateRan
     private String getMessage(String messageKey, Object... args) {
         if (isMessageKey(messageKey)) {
             String actualKey = messageKey.substring(1, messageKey.length() - 1); // { } 제거
-            return MessageProperties.getMessage(actualKey, args);
+            return Message.getMessage(actualKey, args);
         }
         return messageKey; // 키가 아니면 원래 메시지 반환
     }

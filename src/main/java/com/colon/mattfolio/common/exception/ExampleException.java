@@ -1,8 +1,7 @@
 package com.colon.mattfolio.common.exception;
 
-import com.colon.mattfolio.common.base.ApiResultCode;
 import com.colon.mattfolio.common.base.BaseReason;
-import com.colon.mattfolio.common.property.MessageProperties;
+import com.colon.mattfolio.common.property.Message;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,10 +24,10 @@ public class ExampleException extends MasterException {
     @Getter
     @AllArgsConstructor
     public enum Reason implements BaseReason {
-        INVALID_REQUEST(ApiResultCode.Example.INVALID_REQUEST.getCode(), MessageProperties.getMessage("example.invalid.request")), // 요청 파라미터 이상
-        INVALID_ID(ApiResultCode.Example.INVALID_ID.getCode(), MessageProperties.getMessage("example.invalid.id")), // 유효하지 않은 아이디
-        NOT_EXIST_NAME(ApiResultCode.Example.NOT_EXIST_NAME.getCode(), MessageProperties.getMessage("example.not.exist.name")), // 존재하지 않는 이름
-        DUPLICATE_ID(ApiResultCode.Example.DUPLICATE_ID.getCode(), MessageProperties.getMessage("example.duplicate.id")); // 중복된 아이디 존재
+        INVALID_REQUEST(1001, Message.getMessage("example.invalid.request")), // 요청 파라미터 이상
+        INVALID_ID(1002, Message.getMessage("example.invalid.id")), // 유효하지 않은 아이디
+        NOT_EXIST_NAME(1003, Message.getMessage("example.not.exist.name")), // 존재하지 않는 이름
+        DUPLICATE_ID(1004, Message.getMessage("example.duplicate.id")); // 중복된 아이디 존재
 
         private final Integer code; // 예외 코드
         private final String message; // 예외 메시지

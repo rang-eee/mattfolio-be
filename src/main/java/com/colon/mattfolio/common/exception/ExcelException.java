@@ -1,8 +1,7 @@
 package com.colon.mattfolio.common.exception;
 
-import com.colon.mattfolio.common.base.ApiResultCode;
 import com.colon.mattfolio.common.base.BaseReason;
-import com.colon.mattfolio.common.property.MessageProperties;
+import com.colon.mattfolio.common.property.Message;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,13 +23,13 @@ public class ExcelException extends MasterException {
     @Getter
     @AllArgsConstructor
     public enum Reason implements BaseReason {
-        INVALID_RESOURCE(ApiResultCode.Excel.INVALID_RESOURCE.getCode(), MessageProperties.getMessage("excel.invalid.resource")), // 엑셀 이상
-        FAIL_CREATE_XLSX(ApiResultCode.Excel.FAIL_CREATE_XLSX.getCode(), MessageProperties.getMessage("excel.fail.create")), // 엑셀 파일 생성 실패
-        EMPTY_FILE(ApiResultCode.Excel.EMPTY_FILE.getCode(), MessageProperties.getMessage("excel.empty.file")), // 빈 파일
-        NOT_EXCEL_EXTENSION(ApiResultCode.Excel.NOT_EXCEL_EXTENSION.getCode(), MessageProperties.getMessage("excel.invalid.ext")), // 엑셀 확장자 이상
-        INVALID_HEADER(ApiResultCode.Excel.INVALID_HEADER.getCode(), MessageProperties.getMessage("excel.invalid.header")), // 잘못된 헤더
-        HEADER_MISMATCH(ApiResultCode.Excel.HEADER_MISMATCH.getCode(), MessageProperties.getMessage("excel.header.mismatch")), // 헤더와 DTO 불일치
-        ROW_MAPPING_FAIL(ApiResultCode.Excel.ROW_MAPPING_FAIL.getCode(), MessageProperties.getMessage("excel.row.mapping.fail")); // 행 매핑 실패
+        INVALID_RESOURCE(1010, Message.getMessage("excel.invalid.resource")), // 엑셀 이상
+        FAIL_CREATE_XLSX(1011, Message.getMessage("excel.fail.create")), // 엑셀 파일 생성 실패
+        EMPTY_FILE(1012, Message.getMessage("excel.empty.file")), // 빈 파일
+        NOT_EXCEL_EXTENSION(1013, Message.getMessage("excel.invalid.ext")), // 엑셀 확장자 이상
+        INVALID_HEADER(1014, Message.getMessage("excel.invalid.header")), // 잘못된 헤더
+        HEADER_MISMATCH(1015, Message.getMessage("excel.header.mismatch")), // 헤더와 DTO 불일치
+        ROW_MAPPING_FAIL(1016, Message.getMessage("excel.row.mapping.fail")); // 행 매핑 실패
         ;
 
         private final Integer code; // 예외 코드

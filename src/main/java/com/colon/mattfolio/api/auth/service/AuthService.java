@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import com.colon.mattfolio.api.auth.dto.SignInResponse;
 import com.colon.mattfolio.common.auth.AuthUtil;
 import com.colon.mattfolio.common.enumType.LoginAuthProvider;
+import com.colon.mattfolio.common.exception.AuthException;
 import com.colon.mattfolio.database.account.repository.AccountRepository;
-import com.colon.mattfolio.api.auth.dto.RefreshTokenRequest;
+
+import com.colon.mattfolio.api.auth.dto.SignInRequest;
 import com.colon.mattfolio.api.auth.dto.RefreshTokenResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +24,7 @@ public class AuthService {
     private final AccountRepository accountRepository;
     private final AuthUtil authUtil;
 
-    public SignInResponse redirect(RefreshTokenRequest tokenRequest) throws BadRequestException {
+    public SignInResponse siginin(SignInRequest tokenRequest) throws AuthException {
         if (LoginAuthProvider.KAKAO.getAuthProvider()
             .equals(tokenRequest.getRegistrationId())) {
             return kakaoRequestService.redirect(tokenRequest);
@@ -35,10 +37,10 @@ public class AuthService {
         // return googleRequestService.redirect(tokenRequest);
         // }
 
-        throw new BadRequestException("not supported oauth provider");
+        throw new AuthException(AuthException.Reason.INVALID_PROVIDER);
     }
 
-    public SignInResponse refreshToken(RefreshTokenRequest tokenRequest) throws BadRequestException {
+    public SignInResponse refreshToken(SignInRequest tokenRequest) throws BadRequestException {
         String userId = (String) authUtil.get(tokenRequest.getRefreshToken())
             .get("userId");
         String provider = (String) authUtil.get(tokenRequest.getRefreshToken())

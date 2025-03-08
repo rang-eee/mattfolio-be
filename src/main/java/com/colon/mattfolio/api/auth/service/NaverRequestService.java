@@ -8,7 +8,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.colon.mattfolio.api.auth.dto.RefreshTokenRequest;
+import com.colon.mattfolio.api.auth.dto.SignInRequest;
 import com.colon.mattfolio.api.auth.dto.RefreshTokenResponse;
 import com.colon.mattfolio.api.auth.dto.SignInResponse;
 import com.colon.mattfolio.common.auth.AuthUtil;
@@ -41,7 +41,7 @@ public class NaverRequestService implements RequestService<NaverUserInfo> {
     private String USER_INFO_URI;
 
     @Override
-    public SignInResponse redirect(RefreshTokenRequest tokenRequest) {
+    public SignInResponse redirect(SignInRequest tokenRequest) {
         RefreshTokenResponse tokenResponse = getToken(tokenRequest);
         NaverUserInfo naverUserInfo = getUserInfo(tokenResponse.getAccessToken());
 
@@ -65,7 +65,7 @@ public class NaverRequestService implements RequestService<NaverUserInfo> {
     }
 
     @Override
-    public RefreshTokenResponse getToken(RefreshTokenRequest tokenRequest) {
+    public RefreshTokenResponse getToken(SignInRequest tokenRequest) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("grant_type", GRANT_TYPE);
         formData.add("client_id", CLIENT_ID);

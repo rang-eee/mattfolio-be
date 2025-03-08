@@ -5,25 +5,26 @@ import com.colon.mattfolio.common.auth.oauth.dto.KakaoUserInfo;
 import com.colon.mattfolio.common.auth.oauth.dto.NaverUserInfo;
 import com.colon.mattfolio.common.enumType.LoginAuthProvider;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class SignInResponse {
     private LoginAuthProvider authProvider;
+
     private KakaoUserInfo kakaoUserInfo;
+
     private NaverUserInfo naverUserInfo;
+
     private GoogleUserInfo googleUserInfo;
+
     private String accessToken;
+
     private String refreshToken;
 
-    @Builder
-    public SignInResponse(LoginAuthProvider authProvider, KakaoUserInfo kakaoUserInfo, NaverUserInfo naverUserInfo, GoogleUserInfo googleUserInfo, String accessToken, String refreshToken) {
-        this.authProvider = authProvider;
-        this.kakaoUserInfo = kakaoUserInfo;
-        this.naverUserInfo = naverUserInfo;
-        this.googleUserInfo = googleUserInfo;
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-    }
+    @Builder.Default
+    private Boolean needSignup = false;
 }

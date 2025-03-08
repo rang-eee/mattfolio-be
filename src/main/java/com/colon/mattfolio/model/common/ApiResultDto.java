@@ -2,7 +2,9 @@ package com.colon.mattfolio.model.common;
 
 import java.util.List;
 
-import com.colon.mattfolio.common.property.MessageProperties;
+import com.colon.mattfolio.common.exception.CommonException;
+import com.colon.mattfolio.common.exception.MasterException;
+import com.colon.mattfolio.common.property.Message;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -52,7 +54,9 @@ public class ApiResultDto<T> {
      * 기본 생성자. 기본 결과 코드를 10으로 설정합니다.
      */
     public ApiResultDto() {
-        this.resultCode = 10; // 기본 성공 코드 설정
+        this.resultCode = CommonException.Reason.SUCCESS.getCode(); // 기본 성공 코드 설정
+        this.resultMessage = Message.getMessage("common.proc.success"); // 기본 성공 코드 설정
+        this.data = null;
     }
 
     /**
@@ -64,7 +68,7 @@ public class ApiResultDto<T> {
      */
     public ApiResultDto(Integer resultCode, String key, T data) {
         this.resultCode = resultCode;
-        this.resultMessage = MessageProperties.getMessage(key);
+        this.resultMessage = Message.getMessage(key);
         this.data = data;
     }
 
@@ -101,7 +105,12 @@ public class ApiResultDto<T> {
      */
     public ApiResultDto(Integer resultCode, String key) {
         this.resultCode = resultCode;
-        this.resultMessage = MessageProperties.getMessage(key);
+        this.resultMessage = Message.getMessage(key);
+    }
+
+    public void setResultException(MasterException exception) {
+        this.resultCode = exception.getReasonCode();
+        this.resultMessage = exception.getReasonMessage();
     }
 
     /**
@@ -112,7 +121,7 @@ public class ApiResultDto<T> {
      * @param key 메시지 키
      */
     public void setResultMessage(String key) {
-        this.resultMessage = MessageProperties.getMessage(key);
+        this.resultMessage = Message.getMessage(key);
     }
 
     /**
@@ -124,7 +133,7 @@ public class ApiResultDto<T> {
      * @param args 바인딩 변수에 치환될 값
      */
     public void setResultMessage(String key, Object... args) {
-        this.resultMessage = MessageProperties.getMessage(key, args);
+        this.resultMessage = Message.getMessage(key, args);
     }
 
     /**

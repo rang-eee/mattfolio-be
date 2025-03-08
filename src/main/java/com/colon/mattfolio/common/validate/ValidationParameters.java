@@ -1,6 +1,6 @@
 package com.colon.mattfolio.common.validate;
 
-import com.colon.mattfolio.common.property.MessageProperties;
+import com.colon.mattfolio.common.property.Message;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,7 +56,7 @@ public class ValidationParameters {
     public String getMessage(String key, Object... args) {
         if (key.startsWith("{") && key.endsWith("}")) {
             String actualKey = key.substring(1, key.length() - 1); // {와 } 제거
-            return MessageProperties.getMessage(actualKey, args); // 메시지 변환
+            return Message.getMessage(actualKey, args); // 메시지 변환
         }
         return key; // 메시지 키가 아니면 그대로 반환
     }
