@@ -60,6 +60,7 @@ public class NaverRequestService implements RequestService<NaverUserInfo> {
             return SignInResponse.builder()
                 .authProvider(LoginAuthProvider.NAVER)
                 .naverUserInfo(naverUserInfo)
+                .needSignup(true)
                 .build();
         }
     }

@@ -15,12 +15,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.colon.mattfolio.common.auth.SecurityAuthenticationFailEntryPoint;
 import com.colon.mattfolio.common.auth.SecurityTokenAuthenticationFilter;
 import com.colon.mattfolio.common.auth.SecurityTokenExceptionFilter;
-import com.colon.mattfolio.common.auth.jwt.TokenProvider;
-import com.colon.mattfolio.common.auth.oauth.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.colon.mattfolio.common.auth.oauth.OAuth2SuccessHandler;
-import com.colon.mattfolio.common.auth.oauth.OAuth2UserCustomService;
-import com.colon.mattfolio.database.account.repository.AccountRepository;
-import com.colon.mattfolio.database.account.repository.AccountTokenRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,12 +34,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfig {
-
-    // OAuth2 사용자 관련 서비스, 토큰 제공자, 토큰 저장소, 계정 서비스 주입
-    private final OAuth2UserCustomService oAuth2UserCustomService;
-    private final TokenProvider tokenProvider;
-    private final AccountTokenRepository tokenRepository;
-    private final AccountRepository accountRepository;
 
     // TokenAuthenticationFilter를 생성자 주입 받음 (순환 참조 주의)
     private final SecurityTokenAuthenticationFilter tokenAuthenticationFilter;
@@ -112,18 +100,6 @@ public class SecurityConfig {
             .permitAll() // 그 외의 모든 요청은 접근 허용
         );
 
-        // OAuth2 로그인 설정
-        // http.oauth2Login(oauth2 -> oauth2.loginPage("/login") // 사용자 정의 로그인 페이지 URL
-        // // OAuth2 인증 요청 시 상태를 저장할 repository 설정
-        // .authorizationEndpoint(authorization -> authorization.authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository()))
-        // // 인증 성공 후 실행할 핸들러 설정 (토큰 발급 등 추가 처리)
-        // .successHandler(oAuth2SuccessHandler())
-        // // 사용자 정보를 가져오는 서비스 설정
-        // .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserCustomService)));
-
-        // 로그아웃 설정: 로그아웃 성공 시 /login으로 리다이렉트
-        // http.logout(logout -> logout.logoutSuccessUrl("/login"));
-
         // 예외 처리 설정: "/v1/api/**" 경로에 대해 인증 실패 시 CustomAuthenticationEntryPoint를 실행하여 커스텀 JSON 에러 응답 반환
         http.exceptionHandling(exceptionHandling -> exceptionHandling.defaultAuthenticationEntryPointFor(new SecurityAuthenticationFailEntryPoint(), new AntPathRequestMatcher("/v1/api/**")));
 
@@ -150,26 +126,5 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    /**
-     * OAuth2 인증 성공 후 처리할 핸들러 빈을 생성합니다. <br/>
-     * 이 핸들러는 토큰 발급 및 관련 처리를 담당합니다.
-     *
-     * @return OAuth2SuccessHandler 빈
-     */
-    @Bean
-    public OAuth2SuccessHandler oAuth2SuccessHandler() {
-        return new OAuth2SuccessHandler(tokenProvider, tokenRepository, accountRepository, oAuth2AuthorizationRequestBasedOnCookieRepository());
-    }
-
-    /**
-     * OAuth2 인증 요청의 상태 정보를 저장하기 위한 쿠키 기반 Repository 빈을 생성합니다.
-     *
-     * @return OAuth2AuthorizationRequestBasedOnCookieRepository 빈
-     */
-    @Bean
-    public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
-        return new OAuth2AuthorizationRequestBasedOnCookieRepository();
     }
 }

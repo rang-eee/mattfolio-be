@@ -8,10 +8,7 @@ server:
 frontend:
   host: http://localhost:3000
   url:
-    oauth-redirect:
-      kakao: /login/kakao-login
-      naver: /login/naver-login
-      google: /login/google-login
+    oauth-redirect: /login/oauth-login
 ################################################
 
 
