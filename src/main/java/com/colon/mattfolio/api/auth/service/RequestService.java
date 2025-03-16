@@ -1,13 +1,13 @@
 package com.colon.mattfolio.api.auth.service;
 
-import com.colon.mattfolio.api.auth.dto.SignInRequest;
+import com.colon.mattfolio.api.auth.dto.LoginRequest;
 import com.colon.mattfolio.api.auth.dto.RefreshTokenResponse;
-import com.colon.mattfolio.api.auth.dto.SignInResponse;
+import com.colon.mattfolio.api.auth.dto.LoginResponse;
 
 public interface RequestService<T> {
-    SignInResponse redirect(SignInRequest tokenRequest);
+    LoginResponse loginOrSignup(LoginRequest tokenRequest);
 
-    RefreshTokenResponse getToken(SignInRequest tokenRequest);
+    RefreshTokenResponse getToken(LoginRequest tokenRequest);
 
     T getUserInfo(String accessToken);
 

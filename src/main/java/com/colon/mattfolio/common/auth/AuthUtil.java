@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class AuthUtil {
-    @Value("app.auth.token-secret")
+    @Value("${jwt.key}")
     private String secret;
 
     private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 2L; // 2 hours

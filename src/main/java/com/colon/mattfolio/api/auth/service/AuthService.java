@@ -3,14 +3,13 @@ package com.colon.mattfolio.api.auth.service;
 import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
-import com.colon.mattfolio.api.auth.dto.SignInResponse;
+import com.colon.mattfolio.api.auth.dto.LoginRequest;
+import com.colon.mattfolio.api.auth.dto.LoginResponse;
+import com.colon.mattfolio.api.auth.dto.RefreshTokenResponse;
 import com.colon.mattfolio.common.auth.AuthUtil;
 import com.colon.mattfolio.common.enumType.LoginAuthProvider;
 import com.colon.mattfolio.common.exception.AuthException;
 import com.colon.mattfolio.database.account.repository.AccountRepository;
-
-import com.colon.mattfolio.api.auth.dto.SignInRequest;
-import com.colon.mattfolio.api.auth.dto.RefreshTokenResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,28 +23,40 @@ public class AuthService {
     private final AccountRepository accountRepository;
     private final AuthUtil authUtil;
 
-    public SignInResponse siginin(SignInRequest tokenRequest) throws AuthException {
+    public LoginResponse siginin(LoginRequest loginRequest) throws AuthException {
         if (LoginAuthProvider.KAKAO.getAuthProvider()
-            .equals(tokenRequest.getRegistrationId())) {
-            return kakaoRequestService.redirect(tokenRequest);
+            .equals(loginRequest.getRegistrationId())) {
+            return kakaoRequestService.loginOrSignup(loginRequest);
         } else if (LoginAuthProvider.NAVER.getAuthProvider()
-            .equals(tokenRequest.getRegistrationId())) {
-            return naverRequestService.redirect(tokenRequest);
+            .equals(loginRequest.getRegistrationId())) {
+            return naverRequestService.loginOrSignup(loginRequest);
         }
         // else if (AuthProvider.GOOGLE.getAuthProvider()
-        // .equals(tokenRequest.getRegistrationId())) {
-        // return googleRequestService.redirect(tokenRequest);
+        // .equals(loginRequest.getRegistrationId())) {
+        // return googleRequestService.redirect(loginRequest);
         // }
 
         throw new AuthException(AuthException.Reason.INVALID_PROVIDER);
     }
 
-    public SignInResponse refreshToken(SignInRequest tokenRequest) throws BadRequestException {
-        String userId = (String) authUtil.get(tokenRequest.getRefreshToken())
+    public LoginResponse signup(LoginRequest loginRequest) throws AuthException {
+        if (LoginAuthProvider.KAKAO.getAuthProvider()
+            .equals(loginRequest.getRegistrationId())) {
+            return kakaoRequestService.loginOrSignup(loginRequest);
+        } else if (LoginAuthProvider.NAVER.getAuthProvider()
+            .equals(loginRequest.getRegistrationId())) {
+            return naverRequestService.loginOrSignup(loginRequest);
+        }
+
+        throw new AuthException(AuthException.Reason.INVALID_PROVIDER);
+    }
+
+    public LoginResponse refreshToken(LoginRequest loginRequest) throws BadRequestException {
+        String userId = (String) authUtil.get(loginRequest.getRefreshToken())
             .get("userId");
-        String provider = (String) authUtil.get(tokenRequest.getRefreshToken())
+        String provider = (String) authUtil.get(loginRequest.getRefreshToken())
             .get("provider");
-        String oldRefreshToken = (String) authUtil.get(tokenRequest.getRefreshToken())
+        String oldRefreshToken = (String) authUtil.get(loginRequest.getRefreshToken())
             .get("refreshToken");
 
         if (!accountRepository.existsByLoginAuthProviderAndLoginAuthProviderId(LoginAuthProvider.findByCode(provider), userId)) {
@@ -68,7 +79,7 @@ public class AuthService {
 
         String accessToken = authUtil.createAccessToken(userId, LoginAuthProvider.findByCode(provider.toLowerCase()), tokenResponse.getAccessToken());
 
-        return SignInResponse.builder()
+        return LoginResponse.builder()
             .authProvider(LoginAuthProvider.findByCode(provider.toLowerCase()))
             .kakaoUserInfo(null)
             .accessToken(accessToken)

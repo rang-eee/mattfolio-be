@@ -8,9 +8,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.colon.mattfolio.api.auth.dto.SignInRequest;
+import com.colon.mattfolio.api.auth.dto.LoginRequest;
 import com.colon.mattfolio.api.auth.dto.RefreshTokenResponse;
-import com.colon.mattfolio.api.auth.dto.SignInResponse;
+import com.colon.mattfolio.api.auth.dto.LoginResponse;
 import com.colon.mattfolio.common.auth.AuthUtil;
 import com.colon.mattfolio.common.auth.oauth.dto.GoogleUserInfo;
 import com.colon.mattfolio.common.enumType.LoginAuthProvider;
@@ -44,20 +44,20 @@ public class GoogleRequestService implements RequestService<GoogleUserInfo> {
     private String REDIRECT_URI;
 
     @Override
-    public SignInResponse redirect(SignInRequest tokenRequest) {
-        RefreshTokenResponse tokenResponse = getToken(tokenRequest);
+    public LoginResponse loginOrSignup(LoginRequest loginRequest) {
+        RefreshTokenResponse tokenResponse = getToken(loginRequest);
         GoogleUserInfo googleUserInfo = getUserInfo(tokenResponse.getAccessToken());
 
         if (accountRepository.existsByLoginAuthProviderAndLoginAuthProviderId(LoginAuthProvider.GOOGLE, googleUserInfo.getId())) {
             String accessToken = authUtil.createAccessToken(googleUserInfo.getId(), LoginAuthProvider.GOOGLE, tokenResponse.getAccessToken());
             String refreshToken = authUtil.createRefreshToken(googleUserInfo.getId(), LoginAuthProvider.GOOGLE, tokenResponse.getRefreshToken());
-            return SignInResponse.builder()
+            return LoginResponse.builder()
                 .authProvider(LoginAuthProvider.GOOGLE)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
         } else {
-            return SignInResponse.builder()
+            return LoginResponse.builder()
                 .authProvider(LoginAuthProvider.GOOGLE)
                 .googleUserInfo(googleUserInfo)
                 .build();
@@ -65,9 +65,9 @@ public class GoogleRequestService implements RequestService<GoogleUserInfo> {
     }
 
     @Override
-    public RefreshTokenResponse getToken(SignInRequest tokenRequest) {
+    public RefreshTokenResponse getToken(LoginRequest loginRequest) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("code", tokenRequest.getCode());
+        formData.add("code", loginRequest.getCode());
         formData.add("client_id", CLIENT_ID);
         formData.add("client_secret", CLIENT_SECRET);
         formData.add("redirect_uri", REDIRECT_URI);

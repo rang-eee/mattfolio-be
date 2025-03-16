@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
  * - 세션 관리를 STATELESS 모드로 설정하여 토큰 기반 인증을 사용 <br/>
  * - TokenAuthenticationFilter를 UsernamePasswordAuthenticationFilter보다 먼저 실행하여 토큰 인증 처리 <br/>
  * - TokenExceptionFilter를 추가해 토큰 관련 예외를 처리 <br/>
- * - URL별 접근 권한 설정: 일부 URL은 인증 없이 접근 허용, "/v1/api/**"는 인증된 사용자만 접근 <br/>
+ * - URL별 접근 권한 설정: 일부 URL은 인증 없이 접근 허용, "/api/**"는 인증된 사용자만 접근 <br/>
  * - OAuth2 로그인 관련 엔드포인트 및 핸들러 구성 <br/>
  * - 로그아웃 후 리다이렉트 및 인증 실패 시 커스텀 에러 응답(CustomAuthenticationEntryPoint) 반환
  *
@@ -61,10 +61,10 @@ public class SecurityConfig {
      * - 세션 관리: STATELESS 모드 (토큰 기반 인증 사용) <br/>
      * - 커스텀 토큰 인증 필터(TokenAuthenticationFilter)를 UsernamePasswordAuthenticationFilter 앞에 추가 <br/>
      * - TokenExceptionFilter를 추가하여 토큰 인증 과정 중 발생하는 예외를 처리 <br/>
-     * - URL별 접근 권한 설정: 특정 URL은 permitAll, "/v1/api/**"는 인증 필요 <br/>
+     * - URL별 접근 권한 설정: 특정 URL은 permitAll, "/api/**"는 인증 필요 <br/>
      * - OAuth2 로그인 설정: 로그인 페이지, OAuth2 엔드포인트, 인증 성공 핸들러, 사용자 정보 서비스 설정 <br/>
      * - 로그아웃 후 리다이렉트 URL 설정 <br/>
-     * - 예외 처리: "/v1/api/**" 경로에 대해 인증 실패 시 CustomAuthenticationEntryPoint를 실행하여 커스텀 JSON 에러 응답 반환
+     * - 예외 처리: "/api/**" 경로에 대해 인증 실패 시 CustomAuthenticationEntryPoint를 실행하여 커스텀 JSON 에러 응답 반환
      *
      * @param http HttpSecurity 객체
      * @return 구성된 SecurityFilterChain
@@ -90,18 +90,17 @@ public class SecurityConfig {
             .addFilterBefore(new SecurityTokenExceptionFilter(), tokenAuthenticationFilter.getClass());
 
         // URL별 접근 권한 설정
-        http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/api/token")
-            .permitAll() // 토큰 재발급 등 인증 없이 접근 가능한 URL
-            .requestMatchers("/login/**", "/oauth2/**", "/auth/**", "/h2-console/**")
+        http.authorizeHttpRequests(authorize -> //
+        authorize.requestMatchers("/auth/**")
             .permitAll() // 로그인, OAuth2, H2 콘솔 관련 URL은 인증 없이 접근
-            .requestMatchers("/v1/api/**")
-            .authenticated() // "/v1/api/**"는 인증된 사용자만 접근 가능
+            .requestMatchers("/api/**")
+            .authenticated() // "/api/**"는 인증된 사용자만 접근 가능
             .anyRequest()
             .permitAll() // 그 외의 모든 요청은 접근 허용
         );
 
-        // 예외 처리 설정: "/v1/api/**" 경로에 대해 인증 실패 시 CustomAuthenticationEntryPoint를 실행하여 커스텀 JSON 에러 응답 반환
-        http.exceptionHandling(exceptionHandling -> exceptionHandling.defaultAuthenticationEntryPointFor(new SecurityAuthenticationFailEntryPoint(), new AntPathRequestMatcher("/v1/api/**")));
+        // 예외 처리 설정: "/api/**" 경로에 대해 인증 실패 시 CustomAuthenticationEntryPoint를 실행하여 커스텀 JSON 에러 응답 반환
+        http.exceptionHandling(exceptionHandling -> exceptionHandling.defaultAuthenticationEntryPointFor(new SecurityAuthenticationFailEntryPoint(), new AntPathRequestMatcher("/api/**")));
 
         // 최종적으로 구성된 SecurityFilterChain을 반환
         return http.build();

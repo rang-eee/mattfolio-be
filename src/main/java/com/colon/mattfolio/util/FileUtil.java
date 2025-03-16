@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
  * - 파일 확장자를 기반으로 MediaType 결정<br/>
  * - 특정 MediaType이 미리보기 가능한지 확인
  */
-public class FileUtils {
+public class FileUtil {
 
     /**
      * 파일 확장자를 확인하여 적절한 MediaType을 반환하는 메서드

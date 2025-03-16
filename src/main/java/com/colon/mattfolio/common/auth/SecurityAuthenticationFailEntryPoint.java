@@ -8,7 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
-import com.colon.mattfolio.model.common.ApiResultDto;
+import com.colon.mattfolio.common.dto.ApiResultDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletException;

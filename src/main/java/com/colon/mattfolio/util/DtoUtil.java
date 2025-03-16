@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * DTO 객체를 Map<String, Object> 형태로 변환하는 유틸리티 클래스
  */
 @Component
-public class DtoUtils {
+public class DtoUtil {
 
     /**
      * DTO 객체를 Map<String, Object>로 변환하는 메소드

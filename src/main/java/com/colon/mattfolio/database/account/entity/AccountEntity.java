@@ -2,6 +2,7 @@ package com.colon.mattfolio.database.account.entity;
 
 import com.colon.mattfolio.api.account.dto.MemberEditRequest;
 import com.colon.mattfolio.common.enumType.AccountRoleType;
+import com.colon.mattfolio.common.enumType.AccountStatusType;
 import com.colon.mattfolio.common.enumType.LoginAuthProvider;
 import com.colon.mattfolio.database.common.BaseTimeEntity;
 import jakarta.persistence.Column;
@@ -56,6 +57,11 @@ public class AccountEntity extends BaseTimeEntity {
     // 사용자 프로필 이미지 URL
     @Column(name = "PROFILE", nullable = true)
     private String profileImgUrl;
+
+    // 사용자 상태
+    @Column(name = "STATUS", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private AccountStatusType status;
 
     // 사용자 역할 (예: USER, ADMIN 등)
     @Column(name = "ROLE", nullable = false)

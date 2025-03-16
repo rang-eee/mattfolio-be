@@ -13,9 +13,9 @@ import javax.sql.DataSource;
 
 import org.springframework.stereotype.Service;
 
-import com.colon.mattfolio.util.BeanUtils;
-import com.colon.mattfolio.util.DtoUtils;
-import com.colon.mattfolio.util.StringUtils;
+import com.colon.mattfolio.util.BeanUtil;
+import com.colon.mattfolio.util.DtoUtil;
+import com.colon.mattfolio.util.StringUtil;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,7 +74,7 @@ public class HistoryAppendService {
         String histTableName = tableName + "_history";
 
         // DTO를 Map<String, Object> 형태로 변환
-        Map<String, Object> dtoMap = DtoUtils.convertDtoToMap(dto);
+        Map<String, Object> dtoMap = DtoUtil.convertDtoToMap(dto);
 
         // 기본적인 이력 컬럼 추가
         dtoMap.put("history_type", historyType.name());
@@ -85,7 +85,7 @@ public class HistoryAppendService {
         // 컬럼명을 스네이크 케이스로 변환하여 사용
         List<String> columnNames = dtoMap.keySet()
             .stream()
-            .map(StringUtils::camelToSnake)
+            .map(StringUtil::camelToSnake)
             .collect(Collectors.toList());
 
         String columns = String.join(", ", columnNames);
@@ -103,7 +103,7 @@ public class HistoryAppendService {
         log.debug("[이력 저장] 바인딩할 데이터: {}", dtoMap);
 
         // 해당 스키마의 DataSource 객체 가져오기
-        DataSource dataSourceForDb = BeanUtils.getBean(dbSchemaName, DataSource.class);
+        DataSource dataSourceForDb = BeanUtil.getBean(dbSchemaName, DataSource.class);
 
         // SQL 실행 (PreparedStatement 사용)
         try (Connection connection = dataSourceForDb.getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -139,13 +139,13 @@ public class HistoryAppendService {
         }
 
         // 해당 스키마의 DataSource 객체 가져오기
-        DataSource dataSourceForDb = BeanUtils.getBean(dbSchemaName, DataSource.class);
+        DataSource dataSourceForDb = BeanUtil.getBean(dbSchemaName, DataSource.class);
 
         // 이력 테이블명 설정
         String histTableName = tableName + "_history";
 
         // 첫 번째 DTO 객체를 이용해 컬럼명 리스트 추출
-        List<String> columnNames = DtoUtils.getFieldNames(dtoList.get(0));
+        List<String> columnNames = DtoUtil.getFieldNames(dtoList.get(0));
 
         // 이력 컬럼 추가
         columnNames.add("history_type");
@@ -155,7 +155,7 @@ public class HistoryAppendService {
 
         // SQL 생성할 때만 컬럼명을 스네이크 케이스로 변환
         String sqlColumns = columnNames.stream()
-            .map(StringUtils::camelToSnake)
+            .map(StringUtil::camelToSnake)
             .collect(Collectors.joining(", "));
 
         // 바인딩(Placeholder) 문자열 생성 → (?, ?, ?, ...)
@@ -175,7 +175,7 @@ public class HistoryAppendService {
 
             for (Object dto : dtoList) {
                 // DTO를 Map<String, Object> 형태로 변환
-                Map<String, Object> dtoMap = DtoUtils.convertDtoToMap(dto);
+                Map<String, Object> dtoMap = DtoUtil.convertDtoToMap(dto);
 
                 // 기본적인 이력 컬럼 추가
                 dtoMap.put("history_type", historyType.name());

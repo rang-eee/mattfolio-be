@@ -2,23 +2,21 @@ package com.colon.mattfolio.api.example.controller;
 
 import java.util.List;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.colon.mattfolio.api.example.service.ExampleService;
 import com.colon.mattfolio.common.annotation.RoleUser;
 import com.colon.mattfolio.common.base.MasterController;
+import com.colon.mattfolio.common.dto.ApiResultDto;
 import com.colon.mattfolio.database.example.entity.ExampleEntity;
-import com.colon.mattfolio.model.common.ApiResultDto;
 
 import lombok.RequiredArgsConstructor;
 
 /**
  * ExampleController 클래스는 예제 관련 API 엔드포인트를 제공하는 컨트롤러입니다. <br/>
  * - "/api/example" 엔드포인트를 통해 모든 예제 데이터를 조회합니다. <br/>
- * - "/v1/api/example/detail" 엔드포인트는 @RoleUser 어노테이션이 적용되어 인증된 사용자에 대한 상세 정보를 제공하도록 설계되었습니다.
+ * - "/api/example/detail" 엔드포인트는 @RoleUser 어노테이션이 적용되어 인증된 사용자에 대한 상세 정보를 제공하도록 설계되었습니다.
  */
 @RequiredArgsConstructor
 @RestController
@@ -59,14 +57,14 @@ public class ExampleController extends MasterController {
     /**
      * 인증된 사용자에 대한 상세 정보를 조회하는 API 엔드포인트입니다. <br/>
      * 이 엔드포인트는 @RoleUser 어노테이션에 의해 인증된 사용자만 접근할 수 있습니다. <br/>
-     * GET 요청: /v1/api/example/detail <br/>
+     * GET 요청: /api/example/detail <br/>
      * 
      * @param userDetails 현재 인증된 사용자의 세부 정보를 담은 UserDetails 객체 (Spring Security에 의해 주입됨)
      * @return ApiResultDto 객체에 상세 정보(현재는 null)와 관련 메시지가 담겨 반환됩니다.
      */
     @RoleUser
-    @GetMapping("/v1/api/example/detail")
-    public ApiResultDto<String> getAccountDetail(@AuthenticationPrincipal UserDetails userDetails) {
+    @GetMapping("/api/example/detail")
+    public ApiResultDto<String> getAccountDetail() {
         ApiResultDto<String> apiResultVo = new ApiResultDto<>(); // API 응답 객체 생성
 
         // 기본 성공 메시지 설정

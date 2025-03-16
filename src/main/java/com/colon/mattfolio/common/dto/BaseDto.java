@@ -1,4 +1,4 @@
-package com.colon.mattfolio.model.common;
+package com.colon.mattfolio.common.dto;
 
 import java.time.LocalDateTime;
 

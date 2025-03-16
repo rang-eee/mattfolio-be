@@ -7,7 +7,7 @@ import org.apache.commons.text.StringEscapeUtils;
 
 import jakarta.annotation.Nullable;
 
-public class StringUtils {
+public class StringUtil {
 
     private static final char FOLDER_SEPARATOR_CHAR = '/';
 

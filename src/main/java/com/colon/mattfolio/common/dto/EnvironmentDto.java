@@ -1,4 +1,4 @@
-package com.colon.mattfolio.model.common;
+package com.colon.mattfolio.common.dto;
 
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;

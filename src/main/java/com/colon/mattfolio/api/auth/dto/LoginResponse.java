@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class SignInResponse {
+public class LoginResponse {
     private LoginAuthProvider authProvider;
 
     private KakaoUserInfo kakaoUserInfo;
@@ -26,5 +26,5 @@ public class SignInResponse {
     private String refreshToken;
 
     @Builder.Default
-    private Boolean needSignup = false;
+    private Boolean needFaceup = false;
 }

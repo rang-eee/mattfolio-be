@@ -21,9 +21,9 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
+import com.colon.mattfolio.common.dto.ApiResultDto;
 import com.colon.mattfolio.common.exception.MasterException;
 import com.colon.mattfolio.common.property.Message;
-import com.colon.mattfolio.model.common.ApiResultDto;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

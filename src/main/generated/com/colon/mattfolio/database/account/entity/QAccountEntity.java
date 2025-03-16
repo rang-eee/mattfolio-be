@@ -47,6 +47,8 @@ public class QAccountEntity extends EntityPathBase<AccountEntity> {
 
     public final EnumPath<com.colon.mattfolio.common.enumType.AccountRoleType> role = createEnum("role", com.colon.mattfolio.common.enumType.AccountRoleType.class);
 
+    public final EnumPath<com.colon.mattfolio.common.enumType.AccountStatusType> status = createEnum("status", com.colon.mattfolio.common.enumType.AccountStatusType.class);
+
     public QAccountEntity(String variable) {
         super(AccountEntity.class, forVariable(variable));
     }

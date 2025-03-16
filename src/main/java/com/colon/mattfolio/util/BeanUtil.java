@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * 런타임에서 특정 Bean을 조회할 수 있도록 지원하는 역할을 수행한다.
  */
 @Component
-public class BeanUtils implements ApplicationContextAware {
+public class BeanUtil implements ApplicationContextAware {
 
     // 애플리케이션 컨텍스트를 저장하는 정적 변수
     private static ApplicationContext applicationContext;
@@ -28,7 +28,7 @@ public class BeanUtils implements ApplicationContextAware {
      */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        BeanUtils.applicationContext = applicationContext;
+        BeanUtil.applicationContext = applicationContext;
     }
 
     /**
