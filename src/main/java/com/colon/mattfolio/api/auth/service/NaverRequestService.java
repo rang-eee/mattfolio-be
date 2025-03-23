@@ -1,5 +1,7 @@
 package com.colon.mattfolio.api.auth.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -9,11 +11,15 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.colon.mattfolio.api.auth.dto.LoginRequest;
-import com.colon.mattfolio.api.auth.dto.RefreshTokenResponse;
 import com.colon.mattfolio.api.auth.dto.LoginResponse;
-import com.colon.mattfolio.common.auth.AuthUtil;
+import com.colon.mattfolio.api.auth.dto.RefreshTokenResponse;
+import com.colon.mattfolio.common.auth.jwt.TokenProvider;
 import com.colon.mattfolio.common.auth.oauth.dto.NaverUserInfo;
+import com.colon.mattfolio.common.auth.oauth.dto.NaverUserInfo.NaverAccount;
+import com.colon.mattfolio.common.enumType.AccountRoleType;
+import com.colon.mattfolio.common.enumType.AccountStatusType;
 import com.colon.mattfolio.common.enumType.LoginAuthProvider;
+import com.colon.mattfolio.database.account.entity.AccountEntity;
 import com.colon.mattfolio.database.account.repository.AccountRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NaverRequestService implements RequestService<NaverUserInfo> {
     private final AccountRepository accountRepository;
-    private final AuthUtil authUtil;
+    private final TokenProvider tokenProvider;
     private final WebClient webClient;
 
     @Value("${spring.security.oauth2.client.registration.naver.authorization-grant-type}")
@@ -42,27 +48,48 @@ public class NaverRequestService implements RequestService<NaverUserInfo> {
 
     @Override
     public LoginResponse loginOrSignup(LoginRequest loginRequest) {
+        LoginAuthProvider naverLoginAuthProvider = LoginAuthProvider.NAVER;
         RefreshTokenResponse tokenResponse = getToken(loginRequest);
         NaverUserInfo naverUserInfo = getUserInfo(tokenResponse.getAccessToken());
 
-        if (accountRepository.existsByLoginAuthProviderAndLoginAuthProviderId(LoginAuthProvider.GOOGLE, naverUserInfo.getResponse()
-            .getId())) {
-            String accessToken = authUtil.createAccessToken(naverUserInfo.getResponse()
-                .getId(), LoginAuthProvider.NAVER, tokenResponse.getAccessToken());
-            String refreshToken = authUtil.createRefreshToken(naverUserInfo.getResponse()
-                .getId(), LoginAuthProvider.NAVER, tokenResponse.getRefreshToken());
-            return LoginResponse.builder()
-                .authProvider(LoginAuthProvider.NAVER)
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        NaverAccount naverAccount = naverUserInfo.getResponse();
+        String naverId = naverAccount.getId();
+
+        Optional<AccountEntity> existsUserOpt = accountRepository.findByLoginAuthProviderAndLoginAuthProviderId(LoginAuthProvider.NAVER, naverId);
+        Boolean needFaceup = false;
+
+        AccountEntity account;
+        if (existsUserOpt.isPresent()) {
+            account = existsUserOpt.get();
+
+            needFaceup = account.getStatus()
+                .equals(AccountStatusType.FACE_UNIDENTIFIED);
         } else {
-            return LoginResponse.builder()
-                .authProvider(LoginAuthProvider.NAVER)
-                .naverUserInfo(naverUserInfo)
-                // .needSignup(true)
+            // 신규 회원 얼굴사진 업로드 필요
+            needFaceup = true;
+
+            account = AccountEntity.builder()
+                .loginAuthProvider(naverLoginAuthProvider)
+                .loginAuthProviderId(naverId)
+                .email(naverAccount.getEmail())
+                .name(naverAccount.getName())
+                .profileImgUrl(naverAccount.getProfile_image())
+                .status(AccountStatusType.FACE_UNIDENTIFIED)
+                .role(AccountRoleType.USER)
                 .build();
+            accountRepository.save(account);
         }
+
+        String accessToken = tokenProvider.createAccessToken(account, naverLoginAuthProvider, tokenResponse.getAccessToken());
+        String refreshToken = tokenProvider.createRefreshToken(account, naverLoginAuthProvider, accessToken);
+
+        return LoginResponse.builder()
+            .authProvider(naverLoginAuthProvider)
+            .naverUserInfo(naverUserInfo)
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
+            .needFaceup(needFaceup)
+            .build();
     }
 
     @Override

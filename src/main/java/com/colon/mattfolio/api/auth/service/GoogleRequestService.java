@@ -1,5 +1,7 @@
 package com.colon.mattfolio.api.auth.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -9,11 +11,14 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.colon.mattfolio.api.auth.dto.LoginRequest;
-import com.colon.mattfolio.api.auth.dto.RefreshTokenResponse;
 import com.colon.mattfolio.api.auth.dto.LoginResponse;
-import com.colon.mattfolio.common.auth.AuthUtil;
+import com.colon.mattfolio.api.auth.dto.RefreshTokenResponse;
+import com.colon.mattfolio.common.auth.jwt.TokenProvider;
 import com.colon.mattfolio.common.auth.oauth.dto.GoogleUserInfo;
+import com.colon.mattfolio.common.enumType.AccountRoleType;
+import com.colon.mattfolio.common.enumType.AccountStatusType;
 import com.colon.mattfolio.common.enumType.LoginAuthProvider;
+import com.colon.mattfolio.database.account.entity.AccountEntity;
 import com.colon.mattfolio.database.account.repository.AccountRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GoogleRequestService implements RequestService<GoogleUserInfo> {
     private final AccountRepository accountRepository;
-    private final AuthUtil authUtil;
+    private final TokenProvider tokenProvider;
     private final WebClient webClient;
 
     @Value("${spring.security.oauth2.client.registration.google.authorization-grant-type}")
@@ -45,23 +50,47 @@ public class GoogleRequestService implements RequestService<GoogleUserInfo> {
 
     @Override
     public LoginResponse loginOrSignup(LoginRequest loginRequest) {
+        LoginAuthProvider googleLoginAuthProvider = LoginAuthProvider.GOOGLE;
         RefreshTokenResponse tokenResponse = getToken(loginRequest);
         GoogleUserInfo googleUserInfo = getUserInfo(tokenResponse.getAccessToken());
 
-        if (accountRepository.existsByLoginAuthProviderAndLoginAuthProviderId(LoginAuthProvider.GOOGLE, googleUserInfo.getId())) {
-            String accessToken = authUtil.createAccessToken(googleUserInfo.getId(), LoginAuthProvider.GOOGLE, tokenResponse.getAccessToken());
-            String refreshToken = authUtil.createRefreshToken(googleUserInfo.getId(), LoginAuthProvider.GOOGLE, tokenResponse.getRefreshToken());
-            return LoginResponse.builder()
-                .authProvider(LoginAuthProvider.GOOGLE)
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        String googleId = googleUserInfo.getId();
+
+        Optional<AccountEntity> existsUserOpt = accountRepository.findByLoginAuthProviderAndLoginAuthProviderId(googleLoginAuthProvider, googleId);
+        Boolean needFaceup = false;
+
+        AccountEntity account;
+        if (existsUserOpt.isPresent()) {
+            account = existsUserOpt.get();
+
+            needFaceup = account.getStatus()
+                .equals(AccountStatusType.FACE_UNIDENTIFIED);
         } else {
-            return LoginResponse.builder()
-                .authProvider(LoginAuthProvider.GOOGLE)
-                .googleUserInfo(googleUserInfo)
+            // 신규 회원 얼굴사진 업로드 필요
+            needFaceup = true;
+
+            account = AccountEntity.builder()
+                .loginAuthProvider(googleLoginAuthProvider)
+                .loginAuthProviderId(googleId)
+                .email(googleUserInfo.getEmail())
+                .name(googleUserInfo.getName())
+                .profileImgUrl(googleUserInfo.getPicture())
+                .status(AccountStatusType.FACE_UNIDENTIFIED)
+                .role(AccountRoleType.USER)
                 .build();
+            accountRepository.save(account);
         }
+
+        String accessToken = tokenProvider.createAccessToken(account, googleLoginAuthProvider, tokenResponse.getAccessToken());
+        String refreshToken = tokenProvider.createRefreshToken(account, googleLoginAuthProvider, accessToken);
+
+        return LoginResponse.builder()
+            .authProvider(googleLoginAuthProvider)
+            .googleUserInfo(googleUserInfo)
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
+            .needFaceup(needFaceup)
+            .build();
     }
 
     @Override

@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.colon.mattfolio.api.auth.dto.LoginRequest;
 import com.colon.mattfolio.api.auth.dto.LoginResponse;
 import com.colon.mattfolio.api.auth.dto.RefreshTokenResponse;
-import com.colon.mattfolio.common.auth.AuthUtil;
+import com.colon.mattfolio.common.auth.jwt.TokenProvider;
 import com.colon.mattfolio.common.auth.oauth.dto.KakaoUserInfo;
 import com.colon.mattfolio.common.auth.oauth.dto.KakaoUserInfo.KakaoAccount;
 import com.colon.mattfolio.common.auth.oauth.dto.KakaoUserInfo.KakaoAccount.Profile;
@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class KakaoRequestService implements RequestService<KakaoUserInfo> {
     private final AccountRepository accountRepository;
-    private final AuthUtil authUtil;
+    private final TokenProvider tokenProvider;
     private final WebClient webClient;
 
     @Value("${spring.security.oauth2.client.registration.kakao.authorization-grant-type}")
@@ -59,23 +59,24 @@ public class KakaoRequestService implements RequestService<KakaoUserInfo> {
 
         KakaoAccount kakaoAccount = kakaoUserInfo.getKakaoAccount();
         Long kakaoId = kakaoUserInfo.getId();
-        String stringKakaoId = String.valueOf(kakaoUserInfo.getId());
+        String stringKakaoId = String.valueOf(kakaoId);
         Profile kakaoProfile = kakaoAccount.getProfile();
 
         // Boolean existsUser = accountRepository.existsById(kakaoId);
         Optional<AccountEntity> existsUserOpt = accountRepository.findByLoginAuthProviderAndLoginAuthProviderId(LoginAuthProvider.KAKAO, stringKakaoId);
         Boolean needFaceup = false;
 
+        AccountEntity account;
         if (existsUserOpt.isPresent()) {
-            AccountEntity user = existsUserOpt.get();
+            account = existsUserOpt.get();
 
-            needFaceup = user.getStatus()
+            needFaceup = account.getStatus()
                 .equals(AccountStatusType.FACE_UNIDENTIFIED);
         } else {
             // 신규 회원 얼굴사진 업로드 필요
             needFaceup = true;
 
-            AccountEntity accountEntity = AccountEntity.builder()
+            account = AccountEntity.builder()
                 .loginAuthProvider(kakaoLoginAuthProvider)
                 .loginAuthProviderId(stringKakaoId)
                 .email(kakaoAccount.getEmail())
@@ -84,11 +85,12 @@ public class KakaoRequestService implements RequestService<KakaoUserInfo> {
                 .status(AccountStatusType.FACE_UNIDENTIFIED)
                 .role(AccountRoleType.USER)
                 .build();
-            accountRepository.save(accountEntity);
+            accountRepository.save(account);
         }
 
-        String accessToken = authUtil.createAccessToken(String.valueOf(kakaoId), kakaoLoginAuthProvider, tokenResponse.getAccessToken());
-        String refreshToken = authUtil.createRefreshToken(String.valueOf(kakaoId), kakaoLoginAuthProvider, tokenResponse.getRefreshToken());
+        String accessToken = tokenProvider.createAccessToken(account, kakaoLoginAuthProvider, tokenResponse.getAccessToken());
+        String refreshToken = tokenProvider.createRefreshToken(account, kakaoLoginAuthProvider, accessToken);
+
         return LoginResponse.builder()
             .authProvider(kakaoLoginAuthProvider)
             .kakaoUserInfo(kakaoUserInfo)
@@ -114,7 +116,8 @@ public class KakaoRequestService implements RequestService<KakaoUserInfo> {
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(BodyInserters.fromFormData(formData))
             .retrieve()
-            // .onStatus(HttpStatus::is4xxClientError, response -> Mono.just(new BadRequestException()))
+            // .onStatus(HttpStatus::is4xxClientError, response -> Mono.just(new
+            // BadRequestException()))
             .bodyToMono(RefreshTokenResponse.class)
             .block();
     }
@@ -148,7 +151,8 @@ public class KakaoRequestService implements RequestService<KakaoUserInfo> {
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(BodyInserters.fromFormData(formData))
             .retrieve()
-            // .onStatus(HttpStatus::is4xxClientError, response -> Mono.just(new BadRequestException()))
+            // .onStatus(HttpStatus::is4xxClientError, response -> Mono.just(new
+            // BadRequestException()))
             .bodyToMono(RefreshTokenResponse.class)
             .block();
     }

@@ -19,9 +19,23 @@ public class QAccountTokenEntity extends EntityPathBase<AccountTokenEntity> {
 
     public static final QAccountTokenEntity accountTokenEntity = new QAccountTokenEntity("accountTokenEntity");
 
+    public final com.colon.mattfolio.database.common.QBaseTimeEntity _super = new com.colon.mattfolio.database.common.QBaseTimeEntity(this);
+
     public final StringPath accessToken = createString("accessToken");
 
     public final NumberPath<Long> accountId = createNumber("accountId", Long.class);
+
+    //inherited
+    public final NumberPath<Long> createdAccountId = _super.createdAccountId;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdDate = _super.createdDate;
+
+    //inherited
+    public final NumberPath<Long> modifiedAccountId = _super.modifiedAccountId;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifiedDate = _super.modifiedDate;
 
     public final StringPath refreshToken = createString("refreshToken");
 

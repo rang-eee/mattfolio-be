@@ -93,8 +93,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorize -> //
         authorize.requestMatchers("/auth/**")
             .permitAll() // 로그인, OAuth2, H2 콘솔 관련 URL은 인증 없이 접근
-            .requestMatchers("/api/**")
-            .authenticated() // "/api/**"는 인증된 사용자만 접근 가능
+            // .requestMatchers("/api/**")
+            // .authenticated() // "/api/**"는 인증된 사용자만 접근 가능
             .anyRequest()
             .permitAll() // 그 외의 모든 요청은 접근 허용
         );

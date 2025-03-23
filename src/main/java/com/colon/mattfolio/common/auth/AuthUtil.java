@@ -1,99 +1,59 @@
-package com.colon.mattfolio.common.auth;
+// package com.colon.mattfolio.common.auth;
 
-import java.util.Date;
-import java.util.HashMap;
+// import java.util.Collections;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+// import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+// import org.springframework.security.core.Authentication;
+// import org.springframework.security.core.context.SecurityContextHolder;
+// import org.springframework.stereotype.Component;
 
-import com.colon.mattfolio.common.enumType.LoginAuthProvider;
+// import com.colon.mattfolio.common.auth.jwt.TokenProvider;
+// import com.colon.mattfolio.common.enumType.LoginAuthProvider;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.RequiredArgsConstructor;
+// import lombok.RequiredArgsConstructor;
 
-@Component
-@RequiredArgsConstructor
-public class AuthUtil {
-    @Value("${jwt.key}")
-    private String secret;
+// @Component
+// @RequiredArgsConstructor
+// public class AuthUtil {
 
-    private static final Long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 2L; // 2 hours
-    private static final Long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 30L; // 30 days
+// private final TokenProvider tokenProvider;
 
-    public String createAccessToken(String userId, LoginAuthProvider provider, String accessToken) {
-        HashMap<String, Object> claim = new HashMap<>();
-        claim.put("userId", userId);
-        claim.put("provider", provider);
-        claim.put("accessToken", accessToken);
-        return createJwt("ACCESS_TOKEN", ACCESS_TOKEN_EXPIRATION_TIME, claim);
-    }
+// /**
+// * 사용자 식별자와 공급자 정보를 바탕으로 Authentication을 생성하고, <br/>
+// * 이를 이용해 AccessToken을 생성합니다.
+// */
+// public String createAccessToken(String userId, LoginAuthProvider provider, String providerAccessToken) {
+// // 필요한 경우, provider나 providerAccessToken을 클레임에 추가할 수 있음
+// Authentication authentication = new UsernamePasswordAuthenticationToken( //
+// userId, //
+// null, //
+// Collections.emptyList() // 권한 정보가 있다면 여기에 추가
+// );
 
-    public String createRefreshToken(String userId, LoginAuthProvider provider, String refreshToken) {
-        HashMap<String, Object> claim = new HashMap<>();
-        claim.put("userId", userId);
-        claim.put("provider", provider);
-        claim.put("refreshToken", refreshToken);
-        return createJwt("REFRESH_TOKEN", REFRESH_TOKEN_EXPIRATION_TIME, claim);
-    }
+// // SecurityContext에 등록 (선택 사항)
+// SecurityContextHolder.getContext()
+// .setAuthentication(authentication);
 
-    public String createJwt(String subject, Long expiration, HashMap<String, Object> claim) {
-        JwtBuilder jwtBuilder = Jwts.builder()
-            .setHeaderParam("typ", "JWT")
-            .setSubject(subject)
-            .setIssuedAt(new Date())
-            .signWith(SignatureAlgorithm.HS256, secret);
+// // 생성한 Authentication 객체를 사용하여 Access Token 발급
+// return tokenProvider.generateAccessToken(authentication);
+// }
 
-        if (claim != null) {
-            jwtBuilder.setClaims(claim);
-        }
+// /**
+// * 사용자 식별자와 공급자 정보를 바탕으로 Authentication을 생성하고, <br/>
+// * 이를 이용해 RefreshToken을 생성 및 저장합니다.
+// */
+// public String createRefreshToken(String userId, LoginAuthProvider provider, String providerRefreshToken) {
+// Authentication authentication = new UsernamePasswordAuthenticationToken( //
+// userId, //
+// null, //
+// Collections.emptyList()//
+// );
 
-        if (expiration != null) {
-            jwtBuilder.setExpiration(new Date(new Date().getTime() + expiration));
-        }
+// SecurityContextHolder.getContext()
+// .setAuthentication(authentication);
 
-        return jwtBuilder.compact();
-    }
-
-    /**
-     * 복호화
-     */
-    @SuppressWarnings("deprecation")
-    public Claims get(String jwt) throws JwtException {
-        return Jwts.parser() // JwtParserBuilder 반환
-            .setSigningKey(secret) // 비밀 키 설정 (필요에 따라 byte[]로 변환 권장)
-            .build() // JwtParser 객체 생성
-            .parseClaimsJws(jwt) // JWT 파싱
-            .getBody(); // Claims 반환
-    }
-
-    /**
-     * 토큰 만료 여부 체크
-     *
-     * @return true : 만료됨, false : 만료되지 않음
-     */
-    public boolean isExpiration(String jwt) throws JwtException {
-        try {
-            return get(jwt).getExpiration()
-                .before(new Date());
-        } catch (ExpiredJwtException e) {
-            return true;
-        }
-    }
-
-    /**
-     * Refresh token refresh 여부 확인 만료일 7일 이내 일 경우 refresh token 재발급
-     */
-    public boolean canRefresh(String refreshToken) throws JwtException {
-        Claims claims = get(refreshToken);
-        long expirationTime = claims.getExpiration()
-            .getTime();
-        long weekTime = 1000 * 60 * 60 * 24 * 7L;
-
-        return new Date().getTime() > (expirationTime - weekTime);
-    }
-}
+// // RefreshToken 생성 및 저장 (tokenProvider 내부에서 처리)
+// tokenProvider.generateRefreshToken(authentication, providerRefreshToken);
+// return providerRefreshToken;
+// }
+// }

@@ -146,7 +146,8 @@ public class ApiResultDto<T> {
     }
 
     /**
-     * 데이터 타입에 따라 data 필드를 설정하는 메소드
+     * 
+     * /** 데이터 타입에 따라 data 필드를 설정하는 메소드
      * 
      * @param data 설정할 데이터
      * @param type 변환할 대상 타입

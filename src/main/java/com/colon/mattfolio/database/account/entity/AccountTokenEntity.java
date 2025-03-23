@@ -1,5 +1,7 @@
 package com.colon.mattfolio.database.account.entity;
 
+import com.colon.mattfolio.database.common.BaseTimeEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -20,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "MF_TOKEN")
-public class AccountTokenEntity {
+public class AccountTokenEntity extends BaseTimeEntity {
 
     /**
      * 계정의 고유 ID (PRIMARY KEY) <br/>
